@@ -21,12 +21,13 @@
 \begin{document}
 
 \section{Esquemas}
-
-\textbf{Veh\'iculo}(\underline{PATENTE}, modelo, marca, antiguedad, situacion)
+\subsection{Veh\'iculos}
+\subsubsection{Relacional}
+\textbf{Veh\'iculo}(\underline{PATENTE}, a\~{n}o, situacion, \dashuline{IDMODELO})
 \\
 PK = CK = \{PATENTE\}
 \\
-FK = \{IDESTADO\}
+FK = \{IDMODELO\}
 \\
 \\
 \textbf{Veh\'iculoEnUso}(\dashuline{\underline{PATENTE}})
@@ -40,11 +41,15 @@ fechaIngresoTaller)
 PK = CK = FK = \{PATENTE\}
 \\
 \\
-\textbf{Estado}(\underline{ID}, descripcion)
+\textbf{Modelo}(\underline{IDMODELO}, nombre, \dashuline{\underline{IDMARCA}})
 \\
-PK = CK = \{ID\}
+PK = CK = \{(IDMODELO, IDMARCA)\} \\
+FK = \{IDMARCA\} \\
 \\
-\\
+\textbf{Marca} (\underline{IDMARCA}, nombre) \\
+PK = CK = \{IDMARCA\} \\
+FK = \{\} \\
+\subsubsection{Restricciones}
 Establecemos las siguientes \textbf{restricciones adicionales}:
 \\
 \\
@@ -58,71 +63,46 @@ Establecemos las siguientes \textbf{restricciones adicionales}:
 (exclusivo) en \textit{VehiculoEnReparacion.PATENTE}
 \\
 \\
-\textit{Vehiculo.IDESTADO} debe estar en \textit{Estado.ID}
+\textit{Vehiculo.IDMODELO} debe estar en \textit{Modelo.IDMODELO}
 \\
 \\
-\textit{Estado.ID} puede no estar en \textit{Vehiculo.IDESTADO}
+\textit{Modelo.IDMARCA} debe estar en \textit{Marca.IDMARCA}
 \\
 \\
 El atributo \textit{situacion} en el esquema \textit{Vehiculo} permite
 particionar en forma disjunta el conjunto de veh\'iculos.
 \\
 \\
-\textbf{Recorrido}(\dashuline{\underline{numeroOrigen}},
-\dashuline{\underline{calleOrigen}},
-\dashuline{\underline{ciudadOrigen}}, \dashuline{\underline{numeroDestino}},
-\dashuline{\underline{calleDestino}}, \dashuline{\underline{ciudadDestino}})
+\subsection{Rutas y Recorridos}
+\textbf{Recorrido}(\underline{IDRECORRIDO},
+\dashuline{\underline{IDCIUDADORIGEN}},
+\underline{direccionOrigen}, \dashuline{\underline{IDCIUDADDESTINO}},
+\underline{direccionDestino})
 \\
-PK = CK = \{(numeroOrigen, calleOrigen, ciudadOrigen, numeroDestino,
-calleDestino, ciudadDestino)\}
-\\
-FK = \{numeroOrigen, calleOrigen, numeroDestino, calleDestino\}
-\\
-\\
-\textbf{Direccion}(\underline{numero}, \underline{calle},
-\dashuline{\underline{IDCIUDAD}})
-\\
-PK = CK = \{(numero, calle, IDCIUDAD)\}
-\\
-FK = \{IDCIUDAD\}
-\\
+PK = \{IDRECORRIDO\} \\
+CK = \{IDRECORRIDO, (IDCIUDADORIGEN, direccionOrigen, IDCIUDADDESTINO, direccionDestino)\} \\
+FK = \{IDCIUDADORIGEN, IDCIUDADDESTINO\} \\
 \\
 \textbf{Ciudad}(\underline{IDCIUDAD}, nombreCiudad)
 \\
-PK = CK = \{IDCIUDAD\}
+PK = CK = \{IDCIUDAD\} \\
 \\
+\textbf{Ruta}(\underline{IDRUTA}, \dashuline{\underline{IDRECORRIDO}},
+descripcion, km, tiempoEstimado, nroPeajes, 
+\dashuline{\underline{ciudadDestino}}, descripcion, km, tiempoEstimado, nroPeajes) \\
+PK = CK = \{(IDRUTA, IDRECORRIDO)\} \\
+FK = \{ IDRECORRIDO \} \\
 \\
-\textbf{Ruta}(\underline{IDRUTA}, \dashuline{\underline{numeroOrigen}},
-\dashuline{\underline{calleOrigen}},
-\dashuline{\underline{ciudadOrigen}}, \dashuline{\underline{numeroDestino}},
-\dashuline{\underline{calleDestino}}, 
-\dashuline{\underline{ciudadDestino}}, descripcion, km, tiempoEstimado,
-nroPeajes)
+\textbf{PeriodoA\~no}(\underline{IDPERIODOA\~NO}, descripcion) \\
+PK = CK = \{IDPERIODOA\~NO\} \\
 \\
-PK = CK = \{(IDRUTA, (numeroOrigen, calleOrigen, ciudadOrigen, numeroDestino,
-calleDestino, ciudadDestino))\}
+\textbf{CondicionClimatica}(\underline{IDCONDICIONCLIMATICA}, descripcion) \\
+PK = CK = \{IDCONDICIONCLIMATICA\} \\
 \\
-\\
-\textbf{PeriodoA\~no}(\underline{IDPERIODOA\~NO}, descripcion)
-\\
-PK = CK = \{IDPERIODOA\~NO\}
-\\
-\\
-\textbf{CondicionClimatica}(\underline{IDCONDICIONCLIMATICA}, descripcion)
-\\
-PK = CK = \{IDCONDICIONCLIMATICA\}
-\\
-\\
-\textbf{Situacion}(\underline{IDRUTA}, \dashuline{\underline{numeroOrigen}},
-\dashuline{\underline{calleOrigen}},
-\dashuline{\underline{ciudadOrigen}}, \dashuline{\underline{numeroDestino}},
-\dashuline{\underline{calleDestino}}, 
-\dashuline{\underline{ciudadDestino}}, \dashuline{\underline{IDPERIODOA\~NO}},
-\dashuline{\underline{IDCONDICIONCLIMATICA}})
-\\
-PK = CK = \{( (IDRUTA, (numeroOrigen, calleOrigen, ciudadOrigen, numeroDestino,
-calleDestino, ciudadDestino)), IDPERIODOA\~NO, IDCONDICIONCLIMATICA )\}
-\\
+\textbf{SituacionClimatica}(\dashuline{\underline{IDRUTA}}, \dashuline{\underline{IDPERIODOA\~NO}},
+\dashuline{\underline{IDCONDICIONCLIMATICA}}) \\
+PK = CK = \{ (IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA )\} \\
+FK = \{ IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA \} \\
 \\
 \textbf{Viaje}(\underline{IDVIAJE}, contingencias, horaPartida, fechaPartida,
 \dashuline{\underline{IDRUTA}})
