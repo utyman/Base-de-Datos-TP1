@@ -1,2 +1,82 @@
 \section{An\'alisis}
-Lorem ipsum dolor sit lamela
+En esta secci\'on se analiza el documento de enunciado presentado por la pr\'actica. 
+De este documento se extraen las caract\'eristicas fundamentales y necesarias (requerimientos) que se espera de la soluci\'on. 
+Identificar y organizar estos requerimientos, va a ser de gran utilidad para verificar que la soluci\'on
+satisface las caract\'eristicas del problema y contiene los entregables solicitados .\\
+\subsection{Entregables}
+Los entregables solicitados se identifican en la secci\'on ``Consignas de la primera parte'' del enunciado
+\begin{enumerate}
+\item Modelado
+  \begin{enumerate}[label=\roman{*}]
+  \item Modelo de Entidad-Relaci\'on: item a)
+  \item Modelo Relacional: item a)
+  \item Detalles del modelo y verificaci\'on: items b) y d)
+  \end{enumerate}
+\item Implementaci\'on
+  \begin{enumerate}[label=\roman{*}]
+  \item Dise\~no f\'isico: item c)
+  \item Procedimientos y triggers: item e)
+  \end{enumerate}
+\item Testing
+  \begin{enumerate}[label=\roman{*}]
+  \item Datos de prueba: segundo p\'arrafo
+  \item Casos de prueba: segundo p\'arrafo
+  \end{enumerate}
+\end{enumerate}
+
+\subsection{Requerimientos}
+Los requerimientos son las caracter\'isticas fundamentales y esperadas que la soluci\'on debe satisfacer y se identifican en
+la secci\'on ``Descripci\'on del problema''
+\begin{enumerate}
+\item Registros principales: son los datos que a la empresa le interesa registar y mantener de sus choferes,
+  sus veh\'iculos y los recorridos que ofrece. Estos registros son la base para controlar y manejar los viajes y las pol\'itcas de la empresa.
+  \begin{enumerate}[label=\roman{*}]
+  \item Registro de choferes
+    \begin{itemize}
+      \item Datos personales: apellido, nombre, documento, fecha de nacimiento, domicilio y tel\'efono.
+      \item Datos de licencia de conducir: n\'umero, tipo, fecha de otorgamiento, fecha de renovaci\'on, fecha vencimiento y observaciones.
+    \end{itemize}
+  \item Registro de veh\'iculos
+    \begin{itemize}
+      \item Datos del veh\'iculo: n\'umero de patente, marca, modelo.
+      \item Datos relacionados al servicio: antiguedad en el servicio, capacidad de transporte y estado.
+      \item Datos relacionados al estado: El estado de un veh\'iculo puede ser ``en uso'' o ``en reparaci\'on''. 
+      De estar el veh\'iculo en reparaci\'on se registra la fecha de ingreso al taller.
+    \end{itemize}
+  \item Registro de recorridos
+    \begin{itemize}
+      \item Datos de origen y destino: ciudad, calle y n\'umero.
+      \item Los recorridos pueden tener una o m\'as rutas posibles que unen el origen y el destino.
+      \item Datos de las rutas: descripci\'on, largo, tiempo estimado del recorrido, peajes, condiciones
+      del camino y condiciones clim\'aticas (seg\'un el per\'iodo del a\~no).
+    \end{itemize}  
+  \end{enumerate}
+\item Control de viajes: son los requerimientos relacionados acerca de los viajes que realiza y sus controles.
+  \begin{enumerate}[label=\roman{*}]
+  \item Viajes planificados
+    \begin{itemize}
+      \item Datos a registrar: recorrido, fecha y hora de partida, fecha y hora de llegada estimada, veh\'iculo y choferes asignados
+      \item Los viajes los planifica la empresa con los recursos que cuenta, como ser veh\'iculos en uso y choferes habilitados. 
+      \item Cada viaje tiene un m\'aximo de tres choferes asignados.
+    \end{itemize}  
+  \item Viajes realizados
+    \begin{itemize}
+      \item Datos a registrar: fecha y hora de llegada real, ruta elegida y si hubo problemas o demoras en el camino.
+      \item Un mismo recorrido podría ser realizado periódicamente por el mismo vehículo y los mismos choferes en distintas fechas.
+    \end{itemize}  
+  \item Registro de controles
+    \begin{itemize}
+      \item Datos: tipo de test (visi\'on, alcoholemia, ect.), chofer, viaje relacionado, fecha de realizacion y resultado.
+      \item Los controles se hacen a choferes asingados a viajes planificados, antes de la realizaci\'on del mismo.
+    \end{itemize}  
+  \end{enumerate}
+\item Procedimientos y pol\'iticas
+  Son las funcionalidades identificadas en la secci\'on ``Comentario de la c\'atedra''
+  \begin{enumerate}[label=\roman{*}]
+  \item Recorridos para los cuales se usaron todas las rutas asociadas en viajes del a\~no pasado
+  \item Recorridos con mas de una ruta asociada
+  \item Estado y viajes realizados por veh\'iculo
+  \item Lista de choferes que han utilizado, en el \'ultimo semestre, todos los veh\'iculos de menos de dos a\~nos de antiguedad.
+  \item Implemtaci\'on de alguna restricci\'on adicional que surja del dise\~no.
+  \end{enumerate}
+\end{enumerate}
