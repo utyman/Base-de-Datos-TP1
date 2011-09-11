@@ -104,23 +104,28 @@ PK = CK = \{IDCONDICIONCLIMATICA\} \\
 PK = CK = \{ (IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA )\} \\
 FK = \{ IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA \} \\
 \\
-\textbf{Viaje}(\underline{IDVIAJE}, contingencias, horaPartida, fechaPartida,
-\dashuline{\underline{IDRUTA}})
+\textbf{Viaje}(\underline{IDVIAJE}, \dashuline{IDVEHICULO}, contingencias, 
+horaPartida, fechaPartida, \dashuline{IDRECORRIDO}) \\
+PK = \{IDVIAJE\} \\
+CK = \{IDVIAJE, (IDVEHICULO, horaPartida, fechaPartida)\} \\
+FK = \{IDVEHICULO, IDRECORRIDO\} \\
 \\
-PK = CK = \{IDVIAJE\}
+\textbf{ViajeRealizado}(\underline{IDVIAJE}, fechaLlegada, horaLlegada, \dashuline{IDRUTA})
 \\
+PK = CK = \{IDVIAJE\} \\
+FK = \{IDRUTA\} \\
 \\
-\textbf{ViajeRealizado}(\underline{IDVIAJE}, fechaLlegada, horaLlegada)
+\subsubsection{Choferes}
+\textbf{Chofer}(\underline{DNI}, telefono, fechaNacimiento, domicilio, nombre) \\
+PK = \{DNI\} \\
+CK=\{DNI\} \\
 \\
-PK = CK = \{IDVIAJE\}
-\\
-\\
-\textbf{Chofer}(\underline{DNI}, telefono, fechaNacimiento, fechaObtencion,
-fechaRenovacion, domicilio, nombre, nroLicencia, observaciones)
-\\
-CK=\{DNI, nroLicencia\}
-PK = \{DNI\}
-\\
+\textbf{Licencia} (\underline{nroLicencia}, \underline{fechaOtorgamiento}, \underline{tipo},
+observaciones, fechaRenovacion, \dashuline{DNI}) \\
+PK = \{(nroLicencia, fechaOtorgamiento, tipo)\} \\
+CK = \{(nroLicencia, fechaOtorgamiento, tipo), (nroLicencia, fechaVencimiento, tipo),
+(DNI, fechaOtorgamiento, tipo), (DNI, fechaVencimiento, tipo) \} \\
+FK = \{DNI\} \\
 \\
 \textbf{AsignacionChofer}(\dashuline{\underline{DNI}},
 \dashuline{\underline{IDVIAJE}})
@@ -130,14 +135,10 @@ PK = CK=\{(DNI, IDVIAJE)\}
 FK = \{DNI, IDVIAJE\}
 \\
 \\
-\textbf{Test}(\underline{IDTEST}, \dashuline{\underline{DNI}},
-\dashuline{\underline{IDVIAJE}},
-resultado, fechaTest, \dashuline{IDTIPOTEST})
-\\
-PK = CK =\{(DNI, IDVIAJE, IDTEST)\}
-\\
-FK = \{DNI, IDVIAJE, IDTEST\}
-\\
+\textbf{Test}(\underline{\dashuline{IDTIPOTEST}}, \dashuline{\underline{DNI}},
+\dashuline{\underline{IDVIAJE}}, resultado, fechaTest) \\
+PK = CK =\{(DNI, IDVIAJE, IDTIPOTEST)\} \\
+FK = \{DNI, IDVIAJE, IDTIPOTEST\} \\
 \\
 \textbf{TipoTest}(\underline{IDTIPOTEST}, descripcion)
 \\
