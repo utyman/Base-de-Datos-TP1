@@ -1,27 +1,54 @@
-\section{Modelo}
+\section{Modelado}
 
+\subsection{Choferes}
+
+\startEntity{Chofer}
+\addEntityPk{DNI}
+\addEntityField{apellido}
+\addEntityField{nombre}
+\addEntityField{fechaNacimiento}
+\addEntityField{domicilio}
+\addEntityField{telefono}
+\printEntity{
+PK = \{DNI\} \\
+CK = \{DNI\} \\
+}
+
+\startEntity{Licencia}
+\addEntityPk{NUMEROLICENCIA}
+\addEntityPk{fechaOtorgamiento}
+\addEntityPk{tipo}
+\addEntityFk{DNI}
+\addEntityField{fechaRenovacion}
+\addEntityField{fechaVencimiento}
+\addEntityField{observaciones}
+\printEntity{
+PK = \{(NUMEROLICENCIA, fechaOtorgamiento, tipo)\} \\
+CK = \{(NUMEROLICENCIA, fechaOtorgamiento, tipo), (NUMEROLICENCIA, fechaVencimiento, tipo), (DNI, fechaOtorgamiento, tipo), (DNI, fechaVencimiento, tipo) \} \\
+FK = \{DNI\} \\
+}
 
 \subsection{Veh\'iculos}
-\subsubsection{Relacional}
 
-\startEntity{Veh\'iculo}
+\startEntity{Vehiculo}
 \addEntityPk{PATENTE}
-\addEntityField{a\~no}
-\addEntityField{situaci\'on}
 \addEntityFk{IDMODELO}
+\addEntityField{a\~no}
+\addEntityField{antiguedadEnServicio}
+\addEntityField{capacidadDeTransporte}
 \printEntity{
 PK = CK = \{PATENTE\}
 \\
 FK = \{IDMODELO\}
 }
 
-\startEntity{Veh\'iculoEnUso}
+\startEntity{VehiculoEnUso}
 \addEntityPkFk{PATENTE}
 \printEntity{
 PK = CK = FK = \{PATENTE\}
 }
 
-\startEntity{Veh\'iculoEnReparacion}
+\startEntity{VehiculoEnReparacion}
 \addEntityPkFk{PATENTE}
 \addEntityField{fechaIngresoTaller}
 \printEntity{
@@ -30,8 +57,8 @@ PK = CK = FK = \{PATENTE\}
 
 \startEntity{Modelo}
 \addEntityPk{IDMODELO}
-\addEntityField{nombre}
 \addEntityPkFk{IDMARCA}
+\addEntityField{nombre}
 \printEntity{
 PK = CK = \{(IDMODELO, IDMARCA)\} \\
 FK = \{IDMARCA\} \\
@@ -42,100 +69,121 @@ FK = \{IDMARCA\} \\
 \addEntityField{nombre}
 \printEntity{
 PK = CK = \{IDMARCA\} \\
-FK = \{\} \\
+FK = \{\}
 }
 
-\subsubsection{Restricciones}
-Establecemos las siguientes \textbf{restricciones adicionales}:
-\\
-\\
-\textit{VehiculoEnUso.PATENTE} debe estar en \textit{Vehiculo.PATENTE}
-\\
-\\
-\textit{VehiculoEnReparacion.PATENTE} debe estar en \textit{Vehiculo.PATENTE}
-\\
-\\
-\textit{Vehiculo.PATENTE} debe estar en \textit{VehiculoEnUso.PATENTE} o
-(exclusivo) en \textit{VehiculoEnReparacion.PATENTE}
-\\
-\\
-\textit{Vehiculo.IDMODELO} debe estar en \textit{Modelo.IDMODELO}
-\\
-\\
-\textit{Modelo.IDMARCA} debe estar en \textit{Marca.IDMARCA}
-\\
-\\
-El atributo \textit{situacion} en el esquema \textit{Vehiculo} permite
-particionar en forma disjunta el conjunto de veh\'iculos.
-\\
-\\
-\subsection{Rutas y Recorridos}
-\textbf{Recorrido}(\underline{IDRECORRIDO},
-\dashuline{\underline{IDCIUDADORIGEN}},
-\underline{direccionOrigen}, \dashuline{\underline{IDCIUDADDESTINO}},
-\underline{direccionDestino})
-\\
+\subsubsection*{Restricciones}
+
+\modelRestrictionShouldBeIn{VehiculoEnUso.PATENTE}{Vehiculo.PATENTE}
+\modelRestrictionShouldBeIn{VehiculoEnReparacion.PATENTE}{Vehiculo.PATENTE}
+\modelRestrictionShouldBeInOr{Vehiculo.PATENTE}{VehiculoEnUso.PATENTE}{VehiculoEnReparacion.PATENTE}
+\modelRestrictionShouldBeIn{Vehiculo.IDMODELO}{Modelo.IDMODELO}
+\modelRestrictionShouldBeIn{Modelo.IDMARCA}{Marca.IDMARCA}
+
+\subsection{Recorridos y rutas}
+
+\startEntity{Ciudad}
+\addEntityPk{IDCIUDAD}
+\addEntityField{nombre}
+\printEntity{
+PK = CK = \{IDCIUDAD\}
+}
+
+\startEntity{Recorrido}
+\addEntityPk{IDRECORRIDO}
+\addEntityPkFk{IDCIUDADORIGEN}
+\addEntityField{direccionOrigen}
+\addEntityPkFk{IDCIUDADDESTINO}
+\addEntityField{direccionDestino}
+\printEntity{
 PK = \{IDRECORRIDO\} \\
 CK = \{IDRECORRIDO, (IDCIUDADORIGEN, direccionOrigen, IDCIUDADDESTINO, direccionDestino)\} \\
-FK = \{IDCIUDADORIGEN, IDCIUDADDESTINO\} \\
-\\
-\textbf{Ciudad}(\underline{IDCIUDAD}, nombreCiudad)
-\\
-PK = CK = \{IDCIUDAD\} \\
-\\
-\textbf{Ruta}(\underline{IDRUTA}, \dashuline{\underline{IDRECORRIDO}},
-descripcion, km, tiempoEstimado, nroPeajes, 
-\dashuline{\underline{ciudadDestino}}, descripcion, km, tiempoEstimado, nroPeajes) \\
+FK = \{IDCIUDADORIGEN, IDCIUDADDESTINO\}
+}
+
+\startEntity{Ruta}
+\addEntityPk{IDRUTA}
+\addEntityPkFk{IDRECORRIDO}
+\addEntityField{longitud}
+\addEntityField{tiempoEstimado}
+\addEntityField{cantidadPeajes}
+\addEntityField{descripcion}
+\addEntityField{observaciones}
+\printEntity{
 PK = CK = \{(IDRUTA, IDRECORRIDO)\} \\
 FK = \{ IDRECORRIDO \} \\
-\\
-\textbf{PeriodoA\~no}(\underline{IDPERIODOA\~NO}, descripcion) \\
-PK = CK = \{IDPERIODOA\~NO\} \\
-\\
-\textbf{CondicionClimatica}(\underline{IDCONDICIONCLIMATICA}, descripcion) \\
-PK = CK = \{IDCONDICIONCLIMATICA\} \\
-\\
-\textbf{SituacionClimatica}(\dashuline{\underline{IDRUTA}}, \dashuline{\underline{IDPERIODOA\~NO}},
-\dashuline{\underline{IDCONDICIONCLIMATICA}}) \\
+}
+
+\startEntity{CondicionClimatica}
+\addEntityPk{IDCONDICIONCLIMATICA}
+\addEntityField{descripcion}
+\printEntity{
+PK = CK = \{IDCONDICIONCLIMATICA\}
+}
+
+\startEntity{PeriodoA\~no}
+\addEntityPk{IDPERIODOA\~NO}
+\addEntityField{descripcion}
+\printEntity{
+PK = CK = \{IDPERIODOA\~NO\}
+}
+
+\startEntity{SituacionClimaticaRuta}
+\addEntityPk{IDRUTA}
+\addEntityPk{IDPERIODOA\~NO}
+\addEntityPk{IDCONDICIONCLIMATICA}
+\printEntity{
 PK = CK = \{ (IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA )\} \\
-FK = \{ IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA \} \\
-\\
-\textbf{Viaje}(\underline{IDVIAJE}, \dashuline{IDVEHICULO}, contingencias, 
-horaPartida, fechaPartida, \dashuline{IDRECORRIDO}) \\
+FK = \{ IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA \}
+}
+
+\subsection{Viajes y controles}
+
+\startEntity{Viaje}
+\addEntityPk{IDVIAJE}
+\addEntityFk{IDVEHICULO}
+\addEntityFk{IDRECORRIDO}
+\addEntityField{fechaPartida}
+\addEntityField{horaPartida}
+\printEntity{
 PK = \{IDVIAJE\} \\
 CK = \{IDVIAJE, (IDVEHICULO, horaPartida, fechaPartida)\} \\
-FK = \{IDVEHICULO, IDRECORRIDO\} \\
-\\
-\textbf{ViajeRealizado}(\underline{IDVIAJE}, fechaLlegada, horaLlegada, \dashuline{IDRUTA})
-\\
+FK = \{IDVEHICULO, IDRECORRIDO\}
+}
+
+\startEntity{ViajeRealizado}
+\addEntityPk{IDVIAJE}
+\addEntityFk{IDRUTA}
+\addEntityField{fechaLlegada}
+\addEntityField{horaLlegada}
+\addEntityField{contingencias}
+\printEntity{
 PK = CK = \{IDVIAJE\} \\
 FK = \{IDRUTA\} \\
-\\
-\subsubsection{Choferes}
-\textbf{Chofer}(\underline{DNI}, telefono, fechaNacimiento, domicilio, nombre) \\
-PK = \{DNI\} \\
-CK=\{DNI\} \\
-\\
-\textbf{Licencia} (\underline{nroLicencia}, \underline{fechaOtorgamiento}, \underline{tipo},
-observaciones, fechaRenovacion, \dashuline{DNI}) \\
-PK = \{(nroLicencia, fechaOtorgamiento, tipo)\} \\
-CK = \{(nroLicencia, fechaOtorgamiento, tipo), (nroLicencia, fechaVencimiento, tipo),
-(DNI, fechaOtorgamiento, tipo), (DNI, fechaVencimiento, tipo) \} \\
-FK = \{DNI\} \\
-\\
-\textbf{AsignacionChofer}(\dashuline{\underline{DNI}},
-\dashuline{\underline{IDVIAJE}})
-\\
-PK = CK=\{(DNI, IDVIAJE)\}
-\\
+}
+
+\startEntity{AsignacionChoferViaje}
+\addEntityPk{IDVIAJE}
+\addEntityPkFk{DNI}
+\printEntity{
+PK = CK=\{(DNI, IDVIAJE)\} \\
 FK = \{DNI, IDVIAJE\}
-\\
-\\
-\textbf{Test}(\underline{\dashuline{IDTIPOTEST}}, \dashuline{\underline{DNI}},
-\dashuline{\underline{IDVIAJE}}, resultado, fechaTest) \\
+}
+
+\startEntity{TipoTest}
+\addEntityPk{IDTIPOTEST}
+\addEntityField{descripcion}
+\printEntity{
+PK = CK = \{IDTIPOTEST\}
+}
+
+\startEntity{Test}
+\addEntityPkFk{IDVIAJE}
+\addEntityPkFk{DNI}
+\addEntityPkFk{IDTIPOTEST}
+\addEntityField{fechaRealizacion}
+\addEntityField{resultado}
+\printEntity{
 PK = CK =\{(DNI, IDVIAJE, IDTIPOTEST)\} \\
-FK = \{DNI, IDVIAJE, IDTIPOTEST\} \\
-\\
-\textbf{TipoTest}(\underline{IDTIPOTEST}, descripcion)
-\\
-PK = CK =\{IDTIPOTEST\}
+FK = \{DNI, IDVIAJE, IDTIPOTEST\}
+}

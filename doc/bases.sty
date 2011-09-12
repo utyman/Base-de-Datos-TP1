@@ -50,3 +50,23 @@
   {#1}
 \end{flushleft}
 }
+
+
+\def\modelRestriction#1{\begin{flushleft}
+  #1
+\end{flushleft}
+}
+
+
+\def\modelRestrictionField#1{
+  \textit{#1}
+}
+
+\def\modelRestrictionShouldBeIn#1#2{
+  \modelRestriction{\modelRestrictionField{#1} ``debe estar en'' \modelRestrictionField{#2}}
+}
+
+
+\def\modelRestrictionShouldBeInOr#1#2#3{
+  \modelRestriction{\modelRestrictionField{#1} ``debe estar en'' \modelRestrictionField{#2} o (exculisvo) \modelRestrictionField{#3}}
+}
