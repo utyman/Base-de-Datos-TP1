@@ -28,14 +28,23 @@ PK = CK = FK = \{PATENTE\}
 PK = CK = FK = \{PATENTE\}
 }
 
-\textbf{Modelo}(\underline{IDMODELO}, nombre, \dashuline{\underline{IDMARCA}})
-\\
+\startEntity{Modelo}
+\addEntityPk{IDMODELO}
+\addEntityField{nombre}
+\addEntityPkFk{IDMARCA}
+\printEntity{
 PK = CK = \{(IDMODELO, IDMARCA)\} \\
 FK = \{IDMARCA\} \\
-\\
-\textbf{Marca} (\underline{IDMARCA}, nombre) \\
+}
+
+\startEntity{Marca}
+\addEntityPk{IDMODELO}
+\addEntityField{nombre}
+\printEntity{
 PK = CK = \{IDMARCA\} \\
 FK = \{\} \\
+}
+
 \subsubsection{Restricciones}
 Establecemos las siguientes \textbf{restricciones adicionales}:
 \\

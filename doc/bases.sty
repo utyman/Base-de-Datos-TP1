@@ -35,7 +35,7 @@
   \addEntityField{\dashuline{\underline{#1}}}
 }
 \def\addEntityField#1{
-  \if \the\entityFields\the\emptyList
+  \if &\the\entityFields&
     \entityFields={#1}
   \else
     \entityFields=\expandafter{\the\entityFields, #1}
