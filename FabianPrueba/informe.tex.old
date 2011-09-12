@@ -1,0 +1,149 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass{article}
+\usepackage{ulem}
+
+\def\dotuline{\bgroup 
+  \ifdim\ULdepth=\maxdimen  % Set depth based on font, if not set already
+   \settodepth\ULdepth{(j}\advance\ULdepth.4pt\fi
+  \markoverwith{\begingroup
+  \advance\ULdepth0.08ex
+  \lower\ULdepth\hbox{\kern.15em .\kern.1em}%
+  \endgroup}\ULon}
+
+\def\dashuline{\bgroup 
+  \ifdim\ULdepth=\maxdimen  % Set depth based on font, if not set already
+   \settodepth\ULdepth{(j}\advance\ULdepth.4pt\fi
+  \markoverwith{\kern.15em
+  \vtop{\kern\ULdepth \hrule width .3em}%
+  \kern.15em}\ULon}
+
+\begin{document}
+
+\section{Esquemas}
+\subsection{Veh\'iculos}
+\subsubsection{Relacional}
+\textbf{Veh\'iculo}(\underline{PATENTE}, a\~{n}o, situacion, \dashuline{IDMODELO})
+\\
+PK = CK = \{PATENTE\}
+\\
+FK = \{IDMODELO\}
+\\
+\\
+\textbf{Veh\'iculoEnUso}(\dashuline{\underline{PATENTE}})
+\\
+PK = CK = FK = \{PATENTE\}
+\\
+\\
+\textbf{Veh\'iculoEnReparacion}(\dashuline{\underline{PATENTE}},
+fechaIngresoTaller)
+\\
+PK = CK = FK = \{PATENTE\}
+\\
+\\
+\textbf{Modelo}(\underline{IDMODELO}, nombre, \dashuline{\underline{IDMARCA}})
+\\
+PK = CK = \{(IDMODELO, IDMARCA)\} \\
+FK = \{IDMARCA\} \\
+\\
+\textbf{Marca} (\underline{IDMARCA}, nombre) \\
+PK = CK = \{IDMARCA\} \\
+FK = \{\} \\
+\subsubsection{Restricciones}
+Establecemos las siguientes \textbf{restricciones adicionales}:
+\\
+\\
+\textit{VehiculoEnUso.PATENTE} debe estar en \textit{Vehiculo.PATENTE}
+\\
+\\
+\textit{VehiculoEnReparacion.PATENTE} debe estar en \textit{Vehiculo.PATENTE}
+\\
+\\
+\textit{Vehiculo.PATENTE} debe estar en \textit{VehiculoEnUso.PATENTE} o
+(exclusivo) en \textit{VehiculoEnReparacion.PATENTE}
+\\
+\\
+\textit{Vehiculo.IDMODELO} debe estar en \textit{Modelo.IDMODELO}
+\\
+\\
+\textit{Modelo.IDMARCA} debe estar en \textit{Marca.IDMARCA}
+\\
+\\
+El atributo \textit{situacion} en el esquema \textit{Vehiculo} permite
+particionar en forma disjunta el conjunto de veh\'iculos.
+\\
+\\
+\subsection{Rutas y Recorridos}
+\textbf{Recorrido}(\underline{IDRECORRIDO},
+\dashuline{\underline{IDCIUDADORIGEN}},
+\underline{direccionOrigen}, \dashuline{\underline{IDCIUDADDESTINO}},
+\underline{direccionDestino})
+\\
+PK = \{IDRECORRIDO\} \\
+CK = \{IDRECORRIDO, (IDCIUDADORIGEN, direccionOrigen, IDCIUDADDESTINO, direccionDestino)\} \\
+FK = \{IDCIUDADORIGEN, IDCIUDADDESTINO\} \\
+\\
+\textbf{Ciudad}(\underline{IDCIUDAD}, nombreCiudad)
+\\
+PK = CK = \{IDCIUDAD\} \\
+\\
+\textbf{Ruta}(\underline{IDRUTA}, \dashuline{\underline{IDRECORRIDO}},
+descripcion, km, tiempoEstimado, nroPeajes, 
+\dashuline{\underline{ciudadDestino}}, descripcion, km, tiempoEstimado, nroPeajes) \\
+PK = CK = \{(IDRUTA, IDRECORRIDO)\} \\
+FK = \{ IDRECORRIDO \} \\
+\\
+\textbf{PeriodoA\~no}(\underline{IDPERIODOA\~NO}, descripcion) \\
+PK = CK = \{IDPERIODOA\~NO\} \\
+\\
+\textbf{CondicionClimatica}(\underline{IDCONDICIONCLIMATICA}, descripcion) \\
+PK = CK = \{IDCONDICIONCLIMATICA\} \\
+\\
+\textbf{SituacionClimatica}(\dashuline{\underline{IDRUTA}}, \dashuline{\underline{IDPERIODOA\~NO}},
+\dashuline{\underline{IDCONDICIONCLIMATICA}}) \\
+PK = CK = \{ (IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA )\} \\
+FK = \{ IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA \} \\
+\\
+\textbf{Viaje}(\underline{IDVIAJE}, \dashuline{IDVEHICULO}, contingencias, 
+horaPartida, fechaPartida, \dashuline{IDRECORRIDO}) \\
+PK = \{IDVIAJE\} \\
+CK = \{IDVIAJE, (IDVEHICULO, horaPartida, fechaPartida)\} \\
+FK = \{IDVEHICULO, IDRECORRIDO\} \\
+\\
+\textbf{ViajeRealizado}(\underline{IDVIAJE}, fechaLlegada, horaLlegada, \dashuline{IDRUTA})
+\\
+PK = CK = \{IDVIAJE\} \\
+FK = \{IDRUTA\} \\
+\\
+\subsubsection{Choferes}
+\textbf{Chofer}(\underline{DNI}, telefono, fechaNacimiento, domicilio, nombre) \\
+PK = \{DNI\} \\
+CK=\{DNI\} \\
+\\
+\textbf{Licencia} (\underline{nroLicencia}, \underline{fechaOtorgamiento}, \underline{tipo},
+observaciones, fechaRenovacion, \dashuline{DNI}) \\
+PK = \{(nroLicencia, fechaOtorgamiento, tipo)\} \\
+CK = \{(nroLicencia, fechaOtorgamiento, tipo), (nroLicencia, fechaVencimiento, tipo),
+(DNI, fechaOtorgamiento, tipo), (DNI, fechaVencimiento, tipo) \} \\
+FK = \{DNI\} \\
+\\
+\textbf{AsignacionChofer}(\dashuline{\underline{DNI}},
+\dashuline{\underline{IDVIAJE}})
+\\
+PK = CK=\{(DNI, IDVIAJE)\}
+\\
+FK = \{DNI, IDVIAJE\}
+\\
+\\
+\textbf{Test}(\underline{\dashuline{IDTIPOTEST}}, \dashuline{\underline{DNI}},
+\dashuline{\underline{IDVIAJE}}, resultado, fechaTest) \\
+PK = CK =\{(DNI, IDVIAJE, IDTIPOTEST)\} \\
+FK = \{DNI, IDVIAJE, IDTIPOTEST\} \\
+\\
+\textbf{TipoTest}(\underline{IDTIPOTEST}, descripcion)
+\\
+PK = CK =\{IDTIPOTEST\}
+
+
+\end{document}
+
