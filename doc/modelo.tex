@@ -1,6 +1,7 @@
 \section{Modelado}
 
 \subsection{Choferes}
+Las siguientes entidades abarcan los requerimientos listados como 1.I
 
 \startEntity{Chofer}
 \addEntityPk{DNI}
@@ -29,6 +30,7 @@ FK = \{DNI\} \\
 }
 
 \subsection{Veh\'iculos}
+Las siguientes entidades y restriccciones abarcan los requerimientos listados como 1.II
 
 \startEntity{Vehiculo}
 \addEntityPk{PATENTE}
@@ -73,14 +75,17 @@ FK = \{\}
 }
 
 \subsubsection*{Restricciones}
+\begin{itemize}
+\item \modelRestrictionShouldBeIn{VehiculoEnUso.PATENTE}{Vehiculo.PATENTE}
+\item \modelRestrictionShouldBeIn{VehiculoEnReparacion.PATENTE}{Vehiculo.PATENTE}
+\item \modelRestrictionShouldBeInOr{Vehiculo.PATENTE}{VehiculoEnUso.PATENTE}{VehiculoEnReparacion.PATENTE}
+\item \modelRestrictionShouldBeIn{Vehiculo.IDMODELO}{Modelo.IDMODELO}
+\item \modelRestrictionShouldBeIn{Modelo.IDMARCA}{Marca.IDMARCA}
+\end{itemize}
 
-\modelRestrictionShouldBeIn{VehiculoEnUso.PATENTE}{Vehiculo.PATENTE}
-\modelRestrictionShouldBeIn{VehiculoEnReparacion.PATENTE}{Vehiculo.PATENTE}
-\modelRestrictionShouldBeInOr{Vehiculo.PATENTE}{VehiculoEnUso.PATENTE}{VehiculoEnReparacion.PATENTE}
-\modelRestrictionShouldBeIn{Vehiculo.IDMODELO}{Modelo.IDMODELO}
-\modelRestrictionShouldBeIn{Modelo.IDMARCA}{Marca.IDMARCA}
 
 \subsection{Recorridos y rutas}
+Las siguientes entidades abarcan los requerimientos listados como 1.III
 
 \startEntity{Ciudad}
 \addEntityPk{IDCIUDAD}
@@ -138,6 +143,7 @@ FK = \{ IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA \}
 }
 
 \subsection{Viajes y controles}
+Las siguientes entidades y restriccciones abarcan los requerimientos listados como 2.I, 2.II y 2.III
 
 \startEntity{Viaje}
 \addEntityPk{IDVIAJE}
@@ -145,6 +151,8 @@ FK = \{ IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA \}
 \addEntityFk{IDRECORRIDO}
 \addEntityField{fechaPartida}
 \addEntityField{horaPartida}
+\addEntityField{fechaLlegadaEstimada}
+\addEntityField{horaLlegadaEstimada}
 \printEntity{
 PK = \{IDVIAJE\} \\
 CK = \{IDVIAJE, (IDVEHICULO, horaPartida, fechaPartida)\} \\
@@ -187,3 +195,10 @@ PK = CK = \{IDTIPOTEST\}
 PK = CK =\{(DNI, IDVIAJE, IDTIPOTEST)\} \\
 FK = \{DNI, IDVIAJE, IDTIPOTEST\}
 }
+
+\subsubsection*{Restricciones}
+\begin{itemize}
+\item \modelRestriction{AsignacionChoferViaje.IDVIAJE}{``no debe repetirse mas de tres veces''}
+\item \modelRestriction{Test.fechaRealizacion}{``debe ser anterior a'' \modelRestrictionField{Viaje.fechaPartida} ``cuando'' \modelRestrictionField{Test.IDVIAJE} = \modelRestrictionField{Viaje.IDVIAJE}}
+\end{itemize}
+
