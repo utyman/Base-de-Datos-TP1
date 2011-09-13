@@ -36,8 +36,9 @@ Las siguientes entidades y restriccciones abarcan los requerimientos listados co
 \addEntityPk{PATENTE}
 \addEntityFk{IDMODELO}
 \addEntityField{a\~no}
-\addEntityField{antiguedadEnServicio}
+\addEntityField{fechaInicioServicio}
 \addEntityField{capacidadDeTransporte}
+\addEntityField{situacion}
 \printEntity{
 PK = CK = \{PATENTE\}
 \\
@@ -81,6 +82,8 @@ FK = \{\}
 \item \modelRestrictionShouldBeInOr{Vehiculo.PATENTE}{VehiculoEnUso.PATENTE}{VehiculoEnReparacion.PATENTE}
 \item \modelRestrictionShouldBeIn{Vehiculo.IDMODELO}{Modelo.IDMODELO}
 \item \modelRestrictionShouldBeIn{Modelo.IDMARCA}{Marca.IDMARCA}
+\item El atributo \modelRestrictionField{Vehiculo.situacion} permite particionar en forma disjunta el conjunto de veh\'iculos.
+
 \end{itemize}
 
 
