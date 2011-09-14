@@ -29,12 +29,21 @@ CK = \{(NUMEROLICENCIA, fechaOtorgamiento, tipo), (NUMEROLICENCIA, fechaVencimie
 FK = \{DNI\} \\
 }
 
+\subsubsection*{Restricciones}
+\begin{itemize}
+\item \modelRestrictionShouldBeIn{Licencia.DNI}{Chofer.DNI}
+\item \textit{Licencia.fechaOtorgamiento} debe ser anterior a \textit{Licencia.fechaRenovacion} 
+\item \textit{Licencia.fechaRenovacion} debe ser anterior a \textit{Licencia.fechaVencimiento}
+
+\end{itemize}
+
 \subsection{Veh\'iculos}
 Las siguientes entidades y restriccciones abarcan los requerimientos listados como 1.II
 
 \startEntity{Vehiculo}
 \addEntityPk{PATENTE}
 \addEntityFk{IDMODELO}
+\addEntityFk{IDMARCA}
 \addEntityField{a\~no}
 \addEntityField{fechaInicioServicio}
 \addEntityField{capacidadDeTransporte}
@@ -42,7 +51,7 @@ Las siguientes entidades y restriccciones abarcan los requerimientos listados co
 \printEntity{
 PK = CK = \{PATENTE\}
 \\
-FK = \{IDMODELO\}
+FK = \{IDMODELO, IDMARCA\}
 }
 
 \startEntity{VehiculoEnUso}
@@ -80,7 +89,7 @@ FK = \{\}
 \item \modelRestrictionShouldBeIn{VehiculoEnUso.PATENTE}{Vehiculo.PATENTE}
 \item \modelRestrictionShouldBeIn{VehiculoEnReparacion.PATENTE}{Vehiculo.PATENTE}
 \item \modelRestrictionShouldBeInOr{Vehiculo.PATENTE}{VehiculoEnUso.PATENTE}{VehiculoEnReparacion.PATENTE}
-\item \modelRestrictionShouldBeIn{Vehiculo.IDMODELO}{Modelo.IDMODELO}
+\item \modelRestrictionShouldBePK{(Vehiculo.IDMODELO, Vehiculo.IDMARCA)}{Modelo.IDMODELO}
 \item \modelRestrictionShouldBeIn{Modelo.IDMARCA}{Marca.IDMARCA}
 \item El atributo \modelRestrictionField{Vehiculo.situacion} permite particionar en forma disjunta el conjunto de veh\'iculos.
 
@@ -145,6 +154,13 @@ PK = CK = \{ (IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA )\} \\
 FK = \{ IDRUTA, IDPERIODOA\~NO, IDCONDICIONCLIMATICA \}
 }
 
+\subsubsection*{Restricciones}
+\begin{itemize}
+\item \modelRestrictionShouldBeIn{Recorrido.IDCIUDADORIGEN}{Ciudad.IDCIUDAD}
+\item \modelRestrictionShouldBeIn{Recorrido.IDCIUDADDESTINO}{Ciudad.IDCIUDAD}
+\item \modelRestrictionShouldBeIn{Ruta.IDRECORRIDO}{Recorrido.IDRECORRIDO}
+\end{itemize}
+
 \subsection{Viajes y controles}
 Las siguientes entidades y restriccciones abarcan los requerimientos listados como 2.I, 2.II y 2.III
 
@@ -152,21 +168,18 @@ Las siguientes entidades y restriccciones abarcan los requerimientos listados co
 \addEntityPk{IDVIAJE}
 \addEntityFk{IDVEHICULO}
 \addEntityFk{IDRECORRIDO}
-\addEntityField{fechaPartida}
-\addEntityField{horaPartida}
-\addEntityField{fechaLlegadaEstimada}
-\addEntityField{horaLlegadaEstimada}
+\addEntityField{fechaHoraPartida}
+\addEntityField{fechaHoraLlegadaEstimada}
 \printEntity{
 PK = \{IDVIAJE\} \\
-CK = \{IDVIAJE, (IDVEHICULO, horaPartida, fechaPartida)\} \\
+CK = \{IDVIAJE, (IDVEHICULO, fechaHoraPartida)\} \\
 FK = \{IDVEHICULO, IDRECORRIDO\}
 }
 
 \startEntity{ViajeRealizado}
 \addEntityPk{IDVIAJE}
 \addEntityFk{IDRUTA}
-\addEntityField{fechaLlegada}
-\addEntityField{horaLlegada}
+\addEntityField{fechaHoraLlegada}
 \addEntityField{contingencias}
 \printEntity{
 PK = CK = \{IDVIAJE\} \\
@@ -201,6 +214,14 @@ FK = \{DNI, IDVIAJE, IDTIPOTEST\}
 
 \subsubsection*{Restricciones}
 \begin{itemize}
+\item \modelRestrictionShouldBeIn{Viaje.IDRECORRIDO}{Recorrido.IDRECORRIDO}
+\item \modelRestrictionShouldBeIn{ViajeRealizado.IDRUTA}{Ruta.IDRUTA}
+\item \modelRestrictionShouldBeIn{ViajeRealizado.IDVIAJE}{Viaje.IDVIAJE}
+\item \modelRestrictionShouldBeIn{AsignacionChofer.DNI}{Chofer.DNI}
+\item \modelRestrictionShouldBeIn{Test.DNI}{Chofer.DNI}
+\item \modelRestrictionShouldBeIn{Test.IDTIPOTEST}{TipoTest.IDTIPOTEST}
+\item \modelRestrictionShouldBeIn{Test.IDVIAJE}{Viaje.IDVIAJE}
+\item la ruta de un \textit{ViajeRealizado} debe pertener al recorrido del \textit{Viaje} con el mismo IDVIAJE. 
 \item \modelRestriction{AsignacionChoferViaje.IDVIAJE}{``no debe repetirse mas de tres veces''}
 \item \modelRestriction{Test.fechaRealizacion}{``debe ser anterior a'' \modelRestrictionField{Viaje.fechaPartida} ``cuando'' \modelRestrictionField{Test.IDVIAJE} = \modelRestrictionField{Viaje.IDVIAJE}}
 \end{itemize}

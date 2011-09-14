@@ -64,8 +64,12 @@
   \modelRestriction{#1}{ ``debe estar en'' \modelRestrictionField{#2}}
 }
 
+\def\modelRestrictionShouldBePK#1#2{
+  \modelRestriction{#1}{ ``debe ser PK de'' \modelRestrictionField{#2}}
+}
+
 \def\modelRestrictionShouldBeInOr#1#2#3{
-  \modelRestriction{{#1} ``debe estar en'' \modelRestrictionField{#2} o (exculisvo) \modelRestrictionField{#3}}
+  \modelRestriction{{#1} ``debe estar en'' \modelRestrictionField{#2} o (exclusivo) \modelRestrictionField{#3}}
 }
 
 
