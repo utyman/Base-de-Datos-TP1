@@ -51,9 +51,10 @@ DROP TABLE IF EXISTS `choferes`;
 CREATE TABLE `choferes` (
   `dni` varchar(10) NOT NULL,
   `telefono` varchar(20) NOT NULL,
-  `fechaNacimiento` date NOT NULL,
+  `fecha_nacimiento` date NOT NULL,
   `domicilio` varchar(30) NOT NULL,
   `nombre` varchar(100) NOT NULL,
+  `apellido` varchar(100) NOT NULL,
   PRIMARY KEY (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -87,6 +88,7 @@ CREATE TABLE `ciudades` (
 
 LOCK TABLES `ciudades` WRITE;
 /*!40000 ALTER TABLE `ciudades` DISABLE KEYS */;
+INSERT INTO `ciudades` VALUES (1,'Buenos Aires'),(2,'La Plata'),(3,'Mendoza'),(4,'Mar del Plata'),(5,'Dolores'),(6,'Santiago del Estero');
 /*!40000 ALTER TABLE `ciudades` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -125,8 +127,9 @@ CREATE TABLE `licencias` (
   `fecha_otorgamiento` date NOT NULL,
   `tipo` varchar(100) NOT NULL,
   `observaciones` varchar(100) NOT NULL,
-  `fechaRenovacion` date NOT NULL,
+  `fecha_renovacion` datetime NOT NULL,
   `dni_chofer` varchar(10) NOT NULL,
+  `fecha_vencimiento` datetime NOT NULL,
   PRIMARY KEY (`nro_licencia`,`fecha_otorgamiento`,`tipo`),
   KEY `dnis_constraint` (`dni_chofer`),
   CONSTRAINT `dnis_constraint` FOREIGN KEY (`dni_chofer`) REFERENCES `choferes` (`dni`)
@@ -162,6 +165,7 @@ CREATE TABLE `marcas` (
 
 LOCK TABLES `marcas` WRITE;
 /*!40000 ALTER TABLE `marcas` DISABLE KEYS */;
+INSERT INTO `marcas` VALUES (1,'peugeot');
 /*!40000 ALTER TABLE `marcas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -188,6 +192,7 @@ CREATE TABLE `modelos` (
 
 LOCK TABLES `modelos` WRITE;
 /*!40000 ALTER TABLE `modelos` DISABLE KEYS */;
+INSERT INTO `modelos` VALUES (1,'505',1),(2,'504',1);
 /*!40000 ALTER TABLE `modelos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -230,8 +235,8 @@ CREATE TABLE `recorridos` (
   PRIMARY KEY (`id_recorrido`),
   KEY `ciudad_origen_constraint` (`id_ciudad_origen`),
   KEY `ciudad_destino_constraint` (`id_ciudad_destino`),
-  CONSTRAINT `ciudad_origen_constraint` FOREIGN KEY (`id_ciudad_origen`) REFERENCES `ciudades` (`id_ciudad`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ciudad_destino_constraint` FOREIGN KEY (`id_ciudad_destino`) REFERENCES `ciudades` (`id_ciudad`)
+  CONSTRAINT `ciudad_destino_constraint` FOREIGN KEY (`id_ciudad_destino`) REFERENCES `ciudades` (`id_ciudad`),
+  CONSTRAINT `ciudad_origen_constraint` FOREIGN KEY (`id_ciudad_origen`) REFERENCES `ciudades` (`id_ciudad`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -241,6 +246,7 @@ CREATE TABLE `recorridos` (
 
 LOCK TABLES `recorridos` WRITE;
 /*!40000 ALTER TABLE `recorridos` DISABLE KEYS */;
+INSERT INTO `recorridos` VALUES (1,1,2,'Rincon 545','Calle 4 45'),(2,1,3,'Sarandi 444','Libertador 2003'),(3,1,4,'Sarandi 333','Libertador 2222'),(4,1,5,'Sarandi 222','Calle 5 55');
 /*!40000 ALTER TABLE `recorridos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,10 +260,11 @@ DROP TABLE IF EXISTS `rutas`;
 CREATE TABLE `rutas` (
   `id_ruta` int(11) NOT NULL,
   `id_recorrido` int(11) NOT NULL,
-  `km` int(11) NOT NULL,
-  `tiempoEstimado` int(11) NOT NULL,
-  `nroPeajes` int(11) NOT NULL,
-  PRIMARY KEY (`id_ruta`),
+  `longitud` int(11) NOT NULL,
+  `tiempo_estimado` int(11) NOT NULL,
+  `cantidad_peajes` int(11) NOT NULL,
+  `descripcion` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_ruta`,`id_recorrido`) USING BTREE,
   KEY `recorrido_constraint` (`id_recorrido`),
   CONSTRAINT `recorrido_constraint` FOREIGN KEY (`id_recorrido`) REFERENCES `recorridos` (`id_recorrido`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -269,6 +276,7 @@ CREATE TABLE `rutas` (
 
 LOCK TABLES `rutas` WRITE;
 /*!40000 ALTER TABLE `rutas` DISABLE KEYS */;
+INSERT INTO `rutas` VALUES (1,1,23,24,5,''),(1,3,25,4,6,''),(1,4,25,4,6,''),(2,1,25,4,6,''),(2,4,25,4,6,''),(3,4,25,4,6,'');
 /*!40000 ALTER TABLE `rutas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -311,12 +319,12 @@ CREATE TABLE `test` (
   `dni` varchar(10) NOT NULL,
   `id_viaje` int(11) NOT NULL,
   `resultado` varchar(100) NOT NULL,
-  `fecha_test` date NOT NULL,
+  `fecha_realizacion` datetime NOT NULL,
   PRIMARY KEY (`id_tipo_test`,`dni`,`id_viaje`),
   KEY `viaje_test_constraint` (`id_viaje`),
   KEY `dni_test_constraint` (`dni`),
-  CONSTRAINT `tipo_test_constraint` FOREIGN KEY (`id_tipo_test`) REFERENCES `tipo_test` (`id_tipo_test`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dni_test_constraint` FOREIGN KEY (`dni`) REFERENCES `choferes` (`dni`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `tipo_test_constraint` FOREIGN KEY (`id_tipo_test`) REFERENCES `tipo_test` (`id_tipo_test`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `viaje_test_constraint` FOREIGN KEY (`id_viaje`) REFERENCES `viajes` (`id_viaje`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -365,7 +373,11 @@ CREATE TABLE `vehiculos` (
   `ano` int(11) NOT NULL,
   `situacion` tinyint(1) NOT NULL,
   `id_modelo` int(11) NOT NULL,
-  PRIMARY KEY (`patente`)
+  `id_marca` int(11) NOT NULL,
+  `fecha_inicio_servicio` datetime NOT NULL,
+  PRIMARY KEY (`patente`),
+  KEY `veh_modelo_constraint` (`id_modelo`,`id_marca`),
+  CONSTRAINT `veh_modelo_constraint` FOREIGN KEY (`id_modelo`, `id_marca`) REFERENCES `modelos` (`id_modelo`, `id_marca`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -375,8 +387,80 @@ CREATE TABLE `vehiculos` (
 
 LOCK TABLES `vehiculos` WRITE;
 /*!40000 ALTER TABLE `vehiculos` DISABLE KEYS */;
+INSERT INTO `vehiculos` VALUES ('aaa-333',1999,1,1,1,'0000-00-00 00:00:00'),('AAA-444',2000,1,1,1,'0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `vehiculos` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER agregar_vehiculo 
+AFTER insert ON vehiculos
+FOR EACH ROW BEGIN
+	if (new.situacion = 0) then
+		insert into vehiculos_en_reparacion values(new.patente, current_date());
+	else
+		insert into vehiculos_en_uso values(new.patente);
+	end if;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER update_vehiculo 
+before update ON vehiculos
+FOR EACH ROW BEGIN
+	if (new.situacion = 0) then
+		delete from vehiculos_en_uso where patente = old.patente; 
+		insert into vehiculos_en_reparacion values (new.patente, current_date()); 
+	else
+		delete from vehiculos_en_reparacion where patente = old.patente; 
+		insert into vehiculos_en_uso values (new.patente); 
+	end if;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER borrar_vehiculo 
+before delete ON vehiculos
+FOR EACH ROW BEGIN
+	if (old.situacion = 0) then
+		delete from vehiculos_en_reparacion where patente = old.patente;
+	else
+		delete from vehiculos_en_uso where patente = old.patente;
+	end if;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `vehiculos_en_reparacion`
@@ -387,9 +471,9 @@ DROP TABLE IF EXISTS `vehiculos_en_reparacion`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vehiculos_en_reparacion` (
   `patente` varchar(10) NOT NULL,
-  `fechaIngresoTaller` date NOT NULL,
+  `fecha_ingreso_taller` datetime NOT NULL,
   PRIMARY KEY (`patente`),
-  CONSTRAINT `patenet_fk_constraint` FOREIGN KEY (`patente`) REFERENCES `vehiculos` (`patente`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `patenet_fk_constraint` FOREIGN KEY (`patente`) REFERENCES `vehiculos` (`patente`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -401,25 +485,6 @@ LOCK TABLES `vehiculos_en_reparacion` WRITE;
 /*!40000 ALTER TABLE `vehiculos_en_reparacion` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vehiculos_en_reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER del_vehiculo_en_reparacion AFTER DELETE ON vehiculos_en_reparacion
-	FOR EACH ROW
-	BEGIN
-		UPDATE vehiculos SET situacion=1 WHERE patente=old.patente;
-	END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `vehiculos_en_uso`
@@ -441,27 +506,9 @@ CREATE TABLE `vehiculos_en_uso` (
 
 LOCK TABLES `vehiculos_en_uso` WRITE;
 /*!40000 ALTER TABLE `vehiculos_en_uso` DISABLE KEYS */;
+INSERT INTO `vehiculos_en_uso` VALUES ('aaa-333'),('AAA-444');
 /*!40000 ALTER TABLE `vehiculos_en_uso` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER del_vehiculo_en_uso AFTER DELETE ON vehiculos_en_uso
-	FOR EACH ROW
-	BEGIN
-		UPDATE vehiculos SET situacion=0 WHERE patente=old.patente;
-	END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `viajes`
@@ -474,14 +521,14 @@ CREATE TABLE `viajes` (
   `id_viaje` int(11) NOT NULL,
   `id_vehiculo` varchar(10) NOT NULL,
   `contingencias` varchar(300) NOT NULL,
-  `horaPartida` time NOT NULL,
-  `fechaPartida` date NOT NULL,
+  `fecha_hora_partida` datetime NOT NULL,
   `id_recorrido` int(11) NOT NULL,
+  `fecha_hora_llegada_estimada` datetime NOT NULL,
   PRIMARY KEY (`id_viaje`),
   KEY `new_fk_constraint` (`id_vehiculo`),
   KEY `recorridos_constraint` (`id_recorrido`),
-  CONSTRAINT `recorridos_constraint` FOREIGN KEY (`id_recorrido`) REFERENCES `recorridos` (`id_recorrido`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `new_fk_constraint` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculos` (`patente`)
+  CONSTRAINT `new_fk_constraint` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculos` (`patente`),
+  CONSTRAINT `recorridos_constraint` FOREIGN KEY (`id_recorrido`) REFERENCES `recorridos` (`id_recorrido`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -491,6 +538,7 @@ CREATE TABLE `viajes` (
 
 LOCK TABLES `viajes` WRITE;
 /*!40000 ALTER TABLE `viajes` DISABLE KEYS */;
+INSERT INTO `viajes` VALUES (1,'AAA-333','BLABLABLA','2010-03-03 00:00:00',1,'0000-00-00 00:00:00'),(2,'AAA-333','BLABLABLA','2010-03-03 00:00:00',2,'0000-00-00 00:00:00'),(3,'AAA-333','BLABLABLA','2010-03-03 00:00:00',3,'0000-00-00 00:00:00'),(4,'AAA-444','BLABLABLA','2010-04-04 00:00:00',4,'0000-00-00 00:00:00'),(5,'AAA-333','BLABLABLA','2010-03-03 00:00:00',1,'0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `viajes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -503,13 +551,12 @@ DROP TABLE IF EXISTS `viajes_realizados`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `viajes_realizados` (
   `id_viaje` int(11) NOT NULL,
-  `fechaLlegada` date NOT NULL,
-  `horaLlegada` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `fecha_hora_llegada` datetime NOT NULL,
   `id_ruta` int(11) NOT NULL,
   PRIMARY KEY (`id_viaje`),
   KEY `rutas_constraint` (`id_ruta`),
-  CONSTRAINT `viajes_realizados_constraint` FOREIGN KEY (`id_viaje`) REFERENCES `viajes` (`id_viaje`),
-  CONSTRAINT `rutas_constraint` FOREIGN KEY (`id_ruta`) REFERENCES `rutas` (`id_ruta`)
+  CONSTRAINT `rutas_constraint` FOREIGN KEY (`id_ruta`) REFERENCES `rutas` (`id_ruta`),
+  CONSTRAINT `viajes_realizados_constraint` FOREIGN KEY (`id_viaje`) REFERENCES `viajes` (`id_viaje`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -519,6 +566,7 @@ CREATE TABLE `viajes_realizados` (
 
 LOCK TABLES `viajes_realizados` WRITE;
 /*!40000 ALTER TABLE `viajes_realizados` DISABLE KEYS */;
+INSERT INTO `viajes_realizados` VALUES (1,'2010-03-03 00:00:00',1),(5,'2010-03-03 00:00:00',2);
 /*!40000 ALTER TABLE `viajes_realizados` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -531,4 +579,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-09-12  0:44:28
+-- Dump completed on 2011-09-13 22:04:42
