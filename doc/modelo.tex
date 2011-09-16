@@ -34,7 +34,6 @@ FK = \{DNI\} \\
 \item \modelRestrictionShouldBeIn{Licencia.DNI}{Chofer.DNI}
 \item \textit{Licencia.fechaOtorgamiento} debe ser anterior a \textit{Licencia.fechaRenovacion} 
 \item \textit{Licencia.fechaRenovacion} debe ser anterior a \textit{Licencia.fechaVencimiento}
-
 \end{itemize}
 
 \subsection{Veh\'iculos}
@@ -52,12 +51,6 @@ Las siguientes entidades y restriccciones abarcan los requerimientos listados co
 PK = CK = \{PATENTE\}
 \\
 FK = \{IDMODELO, IDMARCA\}
-}
-
-\startEntity{VehiculoEnUso}
-\addEntityPkFk{PATENTE}
-\printEntity{
-PK = CK = FK = \{PATENTE\}
 }
 
 \startEntity{VehiculoEnReparacion}
@@ -88,6 +81,7 @@ FK = \{\}
 \begin{itemize}
 \item \modelRestrictionShouldBeIn{VehiculoEnUso.PATENTE}{Vehiculo.PATENTE}
 \item \modelRestrictionShouldBeIn{VehiculoEnReparacion.PATENTE}{Vehiculo.PATENTE}
+\item \textit{Vehiculo.ano} debe ser anterior o igual al a\~no de \textit{Vehiculo.fechaInicioServicio}
 \item \modelRestrictionShouldBeInOr{Vehiculo.PATENTE}{VehiculoEnUso.PATENTE}{VehiculoEnReparacion.PATENTE}
 \item \modelRestrictionShouldBePK{(Vehiculo.IDMODELO, Vehiculo.IDMARCA)}{Modelo.IDMODELO}
 \item \modelRestrictionShouldBeIn{Modelo.IDMARCA}{Marca.IDMARCA}
@@ -215,7 +209,9 @@ FK = \{DNI, IDVIAJE, IDTIPOTEST\}
 \subsubsection*{Restricciones}
 \begin{itemize}
 \item \modelRestrictionShouldBeIn{Viaje.IDRECORRIDO}{Recorrido.IDRECORRIDO}
+\item {Viaje.IDVEHICULO} debe estar en uso.
 \item \modelRestrictionShouldBeIn{ViajeRealizado.IDRUTA}{Ruta.IDRUTA}
+\item \modelRestrictionShouldBeIn{ViajeRealizado.IDRUTA y Viaje.IDRECORRIDO para el mismo viaje}{(Ruta.IDRUTA, Ruta.IDRECORRIDO)}
 \item \modelRestrictionShouldBeIn{ViajeRealizado.IDVIAJE}{Viaje.IDVIAJE}
 \item \modelRestrictionShouldBeIn{AsignacionChofer.DNI}{Chofer.DNI}
 \item \modelRestrictionShouldBeIn{Test.DNI}{Chofer.DNI}
