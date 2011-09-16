@@ -1,12 +1,22 @@
 \section{Implementaci\'on}
 
-Se utiliz\'o MySql como motor de base de datos para implementar el modelo planteado en el trabajo. 
-
-El c\'odigo SQL para definir las tablas es el siguiente:
+\subsection{Motor de bases de datos}
+El motor de base de datos utilizado para implementar la soluci\'on es MySQL. Fue elegido por ser el m\'as 
+conocido por el equipo de trabajo y por ser un software de bases de datos libre con una importante comunidad de usuarios. \\
+Lo que sigue en esta secci\'on es el c\'odigo fuente para la creaci\'on del modelo. Estos c\'odigos fuentes tambien se pueden
+encontrar en el directorio ``impl/'' de la entrega.
 
 \subsection{Choferes}
 
-\begin{verbatim}
+\definecolor{sqlCode}{rgb}{1,0.0,0.5}
+
+
+\newenvironment{sql}
+{\begin{flushleft}\begin{alltt}\color{sqlCode}}
+{\end{alltt}\end{flushleft}}
+
+
+\begin{sql}
 
 CREATE TABLE  `choferes` (
   `dni` varchar(10) NOT NULL,
@@ -31,11 +41,11 @@ CREATE TABLE  `licencias` (
   CONSTRAINT `dnis_constraint` FOREIGN KEY (`dni_chofer`) REFERENCES `choferes` (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
-\end{verbatim}
+\end{sql}
 
 \subsection{Veh\'iculos}
 
-\begin{verbatim}
+\begin{sql}
 
 
 CREATE TABLE  `marcas` (
@@ -75,11 +85,11 @@ CREATE TABLE  `vehiculos_en_reparacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-\end{verbatim}
+\end{sql}
 
 \subsection{Recorridos y rutas}
 
-\begin{verbatim}
+\begin{sql}
 CREATE TABLE  `ciudades` (
   `id_ciudad` int(11) NOT NULL,
   `nombre_ciudad` varchar(30) NOT NULL,
@@ -134,11 +144,11 @@ CREATE TABLE  `situaciones_climaticas` (
    FOREIGN KEY (`id_condicion_climatica`) REFERENCES `condiciones_climaticas` (`id_condicion_climatica`),
   CONSTRAINT `id_ruta_constraint` FOREIGN KEY (`id_ruta`) REFERENCES `rutas` (`id_ruta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
-\end{verbatim}
+\end{sql}
 
 \subsection{Viajes y Controles}
 
-\begin{verbatim}
+\begin{sql}
 
 CREATE TABLE  `viajes` (
   `id_viaje` int(11) NOT NULL,
@@ -200,18 +210,16 @@ CREATE TABLE  `asignaciones_chofer` (
   REFERENCES `viajes` (`id_viaje`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-\end{verbatim}
+\end{sql}
 
 \subsection{Stored Procedures}
 
 \subsubsection*{RecorridosTodasRutasUsadas}
 
-
-El siguiente \textit{stored procedure} obtiene todos los recorridos para los cuales se usaron todas las rutas posibles registradas para ese  recorrido, para viajes realizados el año pasado y recorridos asociados a más de una ruta.
-
+El siguiente \textit{stored procedure} obtiene todos los recorridos para los cuales se usaron todas las rutas posibles registradas para ese  recorrido, para viajes realizados el año pasado y recorridos asociados a más de una ruta y corresponde al requerimiento listado como 3.I.
 Conceptualmente, se trata de una divisi\'on. Se obtienen todos los recorridos, tales que no existen rutas de ese recorrido para las que no ha habido viajes del \'ultimo a\~no que la usaran. El \'ultimo año se pasa como par\'ametro y se usan funciones auxiliares:
 
-\begin{verbatim}
+\begin{sql}
 CREATE DEFINER=`root`@`localhost` PROCEDURE  
 	`RecorridosTodasRutasUsadas`(IN ano integer)
 BEGIN
@@ -237,11 +245,11 @@ CREATE DEFINER=`root`@`localhost` FUNCTION
 begin
     RETURN (SELECT count(ruta.id_ruta) FROM rutas ruta WHERE ruta.id_recorrido = id_recorrido);
 end
-\end{verbatim}
+\end{sql}
 
-El siguiente \textit{stored procedure} obtiene el promedio de viajes realizados por veh\'iculo por a\~no y el estado en que \'este se encuentra.
+El siguiente \textit{stored procedure} obtiene el promedio de viajes realizados por veh\'iculo por a\~no y el estado en que \'este se encuentra, corresponde al requerimiento listado como 3.III.
 
-\begin{verbatim}
+\begin{sql}
 CREATE DEFINER=`root`@`localhost` FUNCTION  `bases`.`promedioViajesRealizadosPorAno`
 								(patente varchar(10)) RETURNS int(11)
 begin
@@ -260,12 +268,12 @@ BEGIN
 		END
 		
 		
-\end{verbatim}
+\end{sql}
 
 El siguiente \textit{stored procedure} obtiene los choferes que han utilizado todos los veh\'iculos de menos de dos a\~nos 
-de antiguedad, en viajes del \'ultimo semestre.
+de antiguedad, en viajes del \'ultimo semestre. Corresponde al requerimiento listado como 3.IV.
 
-\begin{verbatim}
+\begin{sql}
 		
 CREATE DEFINER=`root`@`localhost` PROCEDURE  
 		`ChoferesTodosLosVehiculosUltimoSemestre`()
@@ -304,5 +312,5 @@ BEGIN
 		END
 		
 		
-\end{verbatim}
+\end{sql}
 
