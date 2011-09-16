@@ -253,20 +253,19 @@ begin
     		FROM vehiculos v where v.patente = patente;
     RETURN (viajes_realizados / (YEAR(NOW()) - ano_inicio_servicio + 1)) ;
 end
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE  `bases`.`promedioViajesYEstado`()
+BEGIN
+		SELECT (SELECT promedioViajesRealizadosPorAno(patente)), situacion from vehiculos;
+		END
+		
+		
 \end{verbatim}
 
 El siguiente \textit{stored procedure} obtiene los choferes que han utilizado todos los veh\'iculos de menos de dos a\~nos 
 de antiguedad, en viajes del \'ultimo semestre.
 
 \begin{verbatim}
-
-CREATE DEFINER=`root`@`localhost` 
-	PROCEDURE `promedioViajesYEstado`(IN id_vehiculo varchar(10))
-BEGIN
-		SELECT promedioViajesRealizadosPorAno(id_vehiculo), 
-		(SELECT situacion FROM vehiculos where patente = id_vehiculo);
-		END
-		
 		
 CREATE DEFINER=`root`@`localhost` PROCEDURE  
 		`ChoferesTodosLosVehiculosUltimoSemestre`()
@@ -299,7 +298,7 @@ BEGIN
 		
 
 		CREATE DEFINER=`root`@`localhost` FUNCTION  `bases`.`agregarseismeses`(fecha DATETIME) 
-				RETURNS datetime
+		RETURNS datetime
 BEGIN
 		return DATE_ADD(fecha, INTERVAL 6 MONTH);
 		END
