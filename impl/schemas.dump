@@ -408,7 +408,7 @@ CREATE TABLE `vehiculos_en_reparacion` (
   `patente` varchar(10) NOT NULL,
   `fecha_ingreso_taller` datetime NOT NULL,
   PRIMARY KEY (`patente`),
-  CONSTRAINT `patenet_fk_constraint` FOREIGN KEY (`patente`) REFERENCES `vehiculos` (`patente`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `patenet_fk_constraint` FOREIGN KEY (`patente`) REFERENCES `vehiculos` (`patente`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -419,30 +419,6 @@ CREATE TABLE `vehiculos_en_reparacion` (
 LOCK TABLES `vehiculos_en_reparacion` WRITE;
 /*!40000 ALTER TABLE `vehiculos_en_reparacion` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vehiculos_en_reparacion` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `vehiculos_en_uso`
---
-
-DROP TABLE IF EXISTS `vehiculos_en_uso`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vehiculos_en_uso` (
-  `patente` varchar(10) NOT NULL,
-  PRIMARY KEY (`patente`),
-  CONSTRAINT `patente_key` FOREIGN KEY (`patente`) REFERENCES `vehiculos` (`patente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `vehiculos_en_uso`
---
-
-LOCK TABLES `vehiculos_en_uso` WRITE;
-/*!40000 ALTER TABLE `vehiculos_en_uso` DISABLE KEYS */;
-INSERT INTO `vehiculos_en_uso` VALUES ('aaa-333'),('AAA-444');
-/*!40000 ALTER TABLE `vehiculos_en_uso` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -514,4 +490,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-09-16  0:24:41
+-- Dump completed on 2011-09-16  1:42:39
