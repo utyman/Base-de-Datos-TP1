@@ -1,16 +1,6 @@
-
+#git ignore file
 
 TP2/sources/.metadata/
-
-TP2/sources/UBADB/.classpath
-TP2/sources/UBADB/.project
-TP2/sources/UBADB/target/
-
-TP2/sources/UBADB-Original/.settings/
-TP2/sources/UBADB-Original/.classpath
-TP2/sources/UBADB-Original/.project
-TP2/sources/UBADB-Original/README.txt
-TP2/sources/UBADB-Original/target/
 
 TP2/sources/*/.classpath
 TP2/sources/*/.project
@@ -18,3 +8,8 @@ TP2/sources/*/.settings/
 TP2/sources/*/target/
 
 
+
+TP2/sources/UBADB-Original/README.txt
+
+
+TP2/sources/UBADB-Benchmark/output.csv
