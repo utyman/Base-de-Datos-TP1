@@ -12,7 +12,9 @@ TP2/sources/UBADB-Original/.project
 TP2/sources/UBADB-Original/README.txt
 TP2/sources/UBADB-Original/target/
 
-TP2/sources/UBADB-New/.classpath
-TP2/sources/UBADB-New/.project
-TP2/sources/UBADB-New/.settings/
-TP2/sources/UBADB-New/target/
+TP2/sources/*/.classpath
+TP2/sources/*/.project
+TP2/sources/*/.settings/
+TP2/sources/*/target/
+
+
