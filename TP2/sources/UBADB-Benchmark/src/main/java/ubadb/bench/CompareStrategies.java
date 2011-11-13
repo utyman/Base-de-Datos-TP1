@@ -10,7 +10,7 @@ import java.util.TreeSet;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
 import ubadb.bench.tests.Test;
 import ubadb.bench.tests.TestResult;
-import ubadb.bench.tests.TraceUtil;
+import ubadb.bench.util.TraceUtil;
 
 public class CompareStrategies {
 	public static void main(String[] args) {
