@@ -1,17 +1,51 @@
 \section{Implementaci\'on}
 
 \subsection{Estructura del codigo}
-Aca ponemos con que nos encontramos y como implementamos lo nuevo. 
-podemos hablar de maven, eclipse y git. javadoc?
-(pancho)
-
+La organizaci\'on del c\'odigo fuente utilizado para este trabajo se basa en Maven. El
+c\'odigo fuente entregado por la c\'atedra ya estaba empaquetado para Maven y ven\'ia
+provisto de su \textit{pom.xml} con su correspondiente nombre de artefacto y versionado.
+Los desarrollado por del grupo tiene como dependencia de Maven a este proyecto, entonces 
+para poder compilar el c\'odigo fuente se necesita tener esta librer\'ia instalada.\\
+El c\'odigo fuente desarrollado por el grupo se divide en dos proyectos de Maven.
+\begin{itemize}
+\item \textbf{UBADB-New}: En este proyecto se implementaron las estrategias MRU y LRU 
+que fueron solicitadas por la c\'atedra. Tambi\'en se implementaron otras estrategias 
+propuestas por el grupo. Se hizo enf\'asis en la documentaci\'on de este proyecto ya
+que contiene estrategias que pueden ser re-utlizables en el futuro.
+\item \textbf{UBADB-Benchmark}: En este proyecto se implementaron los procesos para
+medir la eficiencia de las estrategias mencionadas. Este proyecto depende del anterior.
+\end{itemize}
+  
+   
 \subsection{Estrategias nuevas}
+Hablar de la que habia: FIFO.
 Hablar de MRU y LRU. Hablar de las otras nuevas hechas por nosotros (random, best, count) 
 (fabian?)
 
 \subsection{Tests de unidad}
 aca hay que hablar de junit y los junits que hicimos para testear, que testean cada cosa.
-(fabian?)
+(hernan?)
 
-\subsection{Mediciondes}
-(pancho)
+\subsection{Mediciones}
+Para comparar las distintas estrategias para el \textit{MemoryBuffer} se consider\'o medir
+la tasa de aciertos (\textit{hit rate}) de cada una de ellas ante las mismas secuencias 
+de pedidos y liberaciones de p\'aginas (trazas). De cada \textit{traza} se entiende la tasa
+de aciertos como el porcentaje de \'paginas pedidas donde no se tuvo que acceder a disco
+porque ya estaba cargada en el \textit{MemoryBuffer}. Para poder calcular este resultado
+se midieron la cantidad de pedidos de paginas (\textit{requests}) y la cantidad de veces
+que se tuvo que leer una p\'agina en el disco (\textit{fails}). Con estas dos magintudes
+se define la \textit{hit rate} como: \\
+\begin{center}
+$hit rate = \frac{requests-fails}{requests}$  
+\end{center}
+La \textit{hit rate} se puede considerar como un porcentaje multiplic\'andolo por $100$.
+
+\subsubsection{Trazas utilizadas}
+Las sequencias de pedidos y liberaciones utilizadas para comparar las mediciones fueron
+\begin{itemize}
+\item \textit{File Scan}: bla bla file scan
+\item \textit{Index Scan Clustered}: bla bla
+\item \textit{Index Scan Unclustered}: bla bla
+\item \textit{BNLJ}: bla bla
+\end{itemize}
+   
