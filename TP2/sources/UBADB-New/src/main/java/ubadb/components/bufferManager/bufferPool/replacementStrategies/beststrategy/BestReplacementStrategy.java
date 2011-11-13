@@ -16,8 +16,9 @@ import ubadb.exceptions.PageReplacementStrategyException;
  * @author Grupo9
  */
 public class BestReplacementStrategy implements PageReplacementStrategy {
-	private PageReferenceTrace trace;
-	private int positionInTrace = -1;
+
+	private final PageReferenceTrace trace;
+	private int nextPositionInTrace = 0;
 
 	public BestReplacementStrategy(PageReferenceTrace trace) {
 		this.trace = trace;
@@ -55,11 +56,11 @@ public class BestReplacementStrategy implements PageReplacementStrategy {
 	public int getFutureRequestTime(BufferFrame bufferFrame) {
 		PageId pageId = bufferFrame.getPage().getPageId();
 		List<PageReference> pageReferences = trace.getPageReferences();
-		for (int position = positionInTrace + 1; position < pageReferences
+		for (int position = nextPositionInTrace; position < pageReferences
 				.size(); position++) {
 			PageReference reference = pageReferences.get(position);
 			if (pageId.equals(reference.getPageId())) {
-				return position - positionInTrace;
+				return position;
 			}
 		}
 		return Integer.MAX_VALUE;
@@ -75,8 +76,8 @@ public class BestReplacementStrategy implements PageReplacementStrategy {
 		return new BufferFrame(page);
 	}
 
-	public void nextPositionInTrace() {
-		positionInTrace++;
+	public void moveNextPositionInTrace() {
+		nextPositionInTrace++;
 	}
 
 }

@@ -30,7 +30,7 @@ public abstract class Test {
 	}
 
 	public final TestResult test(Strategy strategy) {
-		PageReferenceTrace trace = createTraces();
+		PageReferenceTrace trace = createRepeatedTrace();
 
 		PageReplacementStrategy replacementStrategy = strategy
 				.createStrategy(trace);
@@ -41,9 +41,7 @@ public abstract class Test {
 				diskManager, bufferPool);
 
 		try {
-			for (int repeat = 0; repeat < repeats; repeat++) {
-				simulateTraces(bufferManager, trace, strategy);
-			}
+			simulateTraces(bufferManager, trace, strategy);
 			int totalReads = bufferManager.getReadsCount();
 			int diskReads = diskManager.getFaultsCount();
 			return new TestResult(totalReads, diskReads);
@@ -53,11 +51,21 @@ public abstract class Test {
 
 	}
 
+	private PageReferenceTrace createRepeatedTrace() {
+		PageReferenceTrace result = new PageReferenceTrace();
+		PageReferenceTrace singleTrace = createTraces();
+		for (int repeat = 0; repeat < repeats; repeat++) {
+			for (PageReference pageReference : singleTrace.getPageReferences()) {
+				result.addPageReference(pageReference);
+			}
+		}
+		return result;
+	}
+
 	private void simulateTraces(BufferManager bufferManager,
 			PageReferenceTrace trace, Strategy strategy) {
 		try {
 			for (PageReference pageReference : trace.getPageReferences()) {
-				strategy.executedRequest();
 				switch (pageReference.getType()) {
 				case REQUEST: {
 					bufferManager.readPage(pageReference.getPageId());
@@ -68,6 +76,7 @@ public abstract class Test {
 					break;
 				}
 				}
+				strategy.executedRequest();
 				Thread.sleep(PAUSE_BETWEEN_REFERENCES);
 			}
 		} catch (Exception e) {
