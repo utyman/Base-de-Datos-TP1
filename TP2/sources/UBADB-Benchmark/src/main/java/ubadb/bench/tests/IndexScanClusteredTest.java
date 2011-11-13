@@ -1,6 +1,12 @@
 package ubadb.bench.tests;
 
+import java.util.Random;
+
+import ubadb.apps.bufferManagement.PageReference;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
+import ubadb.apps.bufferManagement.PageReferenceType;
+import ubadb.common.PageId;
+import ubadb.common.TableId;
 
 public class IndexScanClusteredTest extends Test {
 
@@ -17,9 +23,6 @@ public class IndexScanClusteredTest extends Test {
 
 	@Override
 	protected PageReferenceTrace createTraces() {
-		PageReferenceTrace trace = new PageReferenceTrace();
-		FileScanTest.addScan("A_index", 0, indexLevels, trace);
-		FileScanTest.addScan("A", 0, resultSize, trace);
-		return trace;
+		return (new TraceUtil()).createTraceScanClustered(indexLevels, resultSize);
 	}
 }

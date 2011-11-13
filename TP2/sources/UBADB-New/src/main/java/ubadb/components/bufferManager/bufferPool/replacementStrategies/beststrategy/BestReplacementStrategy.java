@@ -12,14 +12,32 @@ import ubadb.components.bufferManager.bufferPool.replacementStrategies.PageRepla
 import ubadb.exceptions.PageReplacementStrategyException;
 
 /**
+ * Optimum page replacement strategy. Used for benchmark comparison since it
+ * needs to know the future page requests.
+ * 
+ * @see
+ * "BELADY, L.A. A study of replacement algorithms for virtual storage computers. IBM Syst. J. 5,
+2 (1966), 78-101."
  * 
  * @author Grupo9
  */
-public class BestReplacementStrategy implements PageReplacementStrategy {
+public final class BestReplacementStrategy implements PageReplacementStrategy {
 
+	/**
+	 * The trace of all (including future) page references.
+	 */
 	private final PageReferenceTrace trace;
+	
+	/**
+	 * The next position in trace.
+	 */
 	private int nextPositionInTrace = 0;
 
+	/**
+	 * Creates a new BestReplacementStrategy, with the trace given.
+	 * 
+	 * @param trace the page reference trace, including future references.
+	 */
 	public BestReplacementStrategy(PageReferenceTrace trace) {
 		this.trace = trace;
 	}
@@ -32,29 +50,38 @@ public class BestReplacementStrategy implements PageReplacementStrategy {
 	 */
 	public BufferFrame findVictim(Collection<BufferFrame> bufferFrames)
 			throws PageReplacementStrategyException {
-
 		BufferFrame victim = null;
 		int victimTime = Integer.MIN_VALUE;
 
 		for (BufferFrame bufferFrame : bufferFrames) {
-			if (bufferFrame.canBeReplaced()) {
-				int bufferTime = getFutureRequestTime(bufferFrame);
-				if (bufferTime > victimTime) {
-					victim = bufferFrame;
-					victimTime = bufferTime;
-				}
+			// Ignore unreplaceable pages.
+			if (!bufferFrame.canBeReplaced()) {
+				continue;
+			}
+			// Compare to get the page with the biggest time distance
+			// till its next use.
+			int bufferTime = getFutureRequestTime(bufferFrame.getPage());
+			if (bufferTime > victimTime) {
+				victim = bufferFrame;
+				victimTime = bufferTime;
 			}
 		}
+		// If no page to evict found, exception
 		if (victim == null) {
 			throw new PageReplacementStrategyException(
 					"No page can be removed from pool");
-		} else {
-			return victim;
 		}
+		return victim;
 	}
 
-	public int getFutureRequestTime(BufferFrame bufferFrame) {
-		PageId pageId = bufferFrame.getPage().getPageId();
+	/**
+	 * Returns the closest time when the specified page will be referenced.
+	 * 
+	 * @param page the page.
+	 * @return the closest time when the specified page will be referenced.
+	 */
+	public int getFutureRequestTime(Page page) {
+		PageId pageId = page.getPageId();
 		List<PageReference> pageReferences = trace.getPageReferences();
 		for (int position = nextPositionInTrace; position < pageReferences
 				.size(); position++) {
@@ -76,6 +103,9 @@ public class BestReplacementStrategy implements PageReplacementStrategy {
 		return new BufferFrame(page);
 	}
 
+	/**
+	 * Marks as one unit of time (page reference) passed.
+	 */
 	public void moveNextPositionInTrace() {
 		nextPositionInTrace++;
 	}

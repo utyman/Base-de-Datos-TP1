@@ -22,22 +22,7 @@ public class BNLJTest extends Test {
 
 	@Override
 	protected PageReferenceTrace createTraces() {
-		PageReferenceTrace trace = new PageReferenceTrace();
-		for (int f = 0; f < firstCount; f++) {
-			int block = Math.min(blocks, firstCount - f);
-			addScan("A", f, f + block, PageReferenceType.REQUEST, trace);
-			FileScanTest.addScan("B", 0, secondCount, trace);
-			addScan("A", f, f + block, PageReferenceType.RELEASE, trace);
-		}
-		return trace;
-	}
-
-	static void addScan(String table, int from, int to, PageReferenceType type,
-			PageReferenceTrace trace) {
-		for (int page = from; page < to; page++) {
-			trace.addPageReference(new PageReference(new PageId(page,
-					new TableId(table)), type));
-		}
+		return (new TraceUtil()).createTracesBNLJ(firstCount, secondCount, blocks);
 	}
 
 }

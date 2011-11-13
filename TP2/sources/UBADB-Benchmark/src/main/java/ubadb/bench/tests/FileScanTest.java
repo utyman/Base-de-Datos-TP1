@@ -18,17 +18,8 @@ public class FileScanTest extends Test {
 
 	@Override
 	protected PageReferenceTrace createTraces() {
-		PageReferenceTrace trace = new PageReferenceTrace();
-		addScan("A", 0, pages, trace);
-		return trace;
+		return (new TraceUtil()).createTracesFileScan(pages);
+		
 	}
 
-	static void addScan(String table, int from, int to, PageReferenceTrace trace) {
-		for (int page = from; page < to; page++) {
-			trace.addPageReference(new PageReference(new PageId(page,
-					new TableId(table)), PageReferenceType.REQUEST));
-			trace.addPageReference(new PageReference(new PageId(page,
-					new TableId(table)), PageReferenceType.RELEASE));
-		}
-	}
 }
