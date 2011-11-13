@@ -1,9 +1,13 @@
 package ubadb.bench.tests;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import ubadb.apps.bufferManagement.PageReference;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
+import ubadb.apps.bufferManagement.PageReferenceTraceGenerator;
 import ubadb.apps.bufferManagement.PageReferenceType;
 import ubadb.common.PageId;
 import ubadb.common.TableId;
@@ -22,6 +26,35 @@ public class TraceUtil {
 
 	private static final int BLOCKS = 5;
 
+	public int calculateMaxPinned(PageReferenceTrace trace) {
+		List<PageReference> pageReferences = trace.getPageReferences();
+		Map<PageId, Integer> pinsPerPages = generatePinsPerPages(pageReferences);
+		int currentlyPinnedPages = 0;
+		int maxConcurrentlyPinnedPages = 0;
+		
+		for(PageReference pageReference : pageReferences) {
+			if (pageReference.getType().equals(PageReferenceType.REQUEST)) {
+				pinsPerPages.put(pageReference.getPageId(), pinsPerPages.get(pageReference.getPageId()) + 1);
+				currentlyPinnedPages++;
+				if (currentlyPinnedPages > maxConcurrentlyPinnedPages) {
+					maxConcurrentlyPinnedPages = currentlyPinnedPages;
+				}
+			} else {
+				pinsPerPages.put(pageReference.getPageId(), pinsPerPages.get(pageReference.getPageId()) - 1); 
+				currentlyPinnedPages--;
+			}
+		}
+		return maxConcurrentlyPinnedPages;
+	}
+	private Map<PageId, Integer> generatePinsPerPages(
+			List<PageReference> pageReferences) {
+		Map<PageId, Integer> pinsPerPages = new HashMap<PageId, Integer>();
+		
+		for (PageReference pageReference : pageReferences) {
+			pinsPerPages.put(pageReference.getPageId(), new Integer(0));
+		}
+		return pinsPerPages;
+	}
 	public PageReferenceTrace generateRandomTrace(int numberOfTracesToConcat,
 			int pagesBySingleTrace) {
 		// generator used to create all-concatenated different kinds of traces
@@ -117,12 +150,18 @@ public class TraceUtil {
 			trace.addPageReference(new PageReference(new PageId(page,
 					new TableId(table)), type));
 		}
+
 	}
 
 	public static void main(String[] args) {
 		try {
 			TraceUtil util = new TraceUtil();
-			System.out.println(util.generateRandomTrace(10, 10));
+			PageReferenceTraceGenerator gen = new PageReferenceTraceGenerator();
+//			System.out.println(gen.generateFileScan("A",0,5));
+//			System.out.println(gen.generateIndexScanClustered("A", 3, 3, 3));
+//			System.out.println(gen.generateIndexScanUnclustered("A", 3, 3, 10));
+			System.out.println(gen.generateBNLJ("A", 7, "B", 4, 3));
+			System.out.println("max: " + util.calculateMaxPinned(gen.generateBNLJ("A", 7, "B", 4, 3)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
