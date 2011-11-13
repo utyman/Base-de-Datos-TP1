@@ -13,6 +13,6 @@ public class MockObjectFactory
 
 	public static final Page PAGE = new Page(PAGE_ID, "abc".getBytes());
 	public static final Page PAGE_1 = new Page(PAGE_ID_1, "abc".getBytes());
-	public static final Page PAGE_2 = new Page(PAGE_ID_1, "abc".getBytes());
+	public static final Page PAGE_2 = new Page(PAGE_ID_2, "abc".getBytes());
 
 }

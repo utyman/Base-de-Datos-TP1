@@ -34,4 +34,13 @@ public final class CountBufferFrame extends BufferFrame {
 		super.pin();
 		strategy.countPin(getPage().getPageId());
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "[CountBufferFrame: " + this.getPage().getPageId() + "]";
+	}
+	
 }
