@@ -1,8 +1,8 @@
 package ubadb.components.bufferManager.bufferPool.replacementStrategies.count;
 
-import java.util.Arrays;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import ubadb.components.bufferManager.bufferPool.BufferFrame;
 import ubadb.exceptions.PageReplacementStrategyException;
 import ubadb.mocks.MockObjectFactory;
 
-public class CountReplacementStrategyTest extends TestCase {
+public class CountReplacementStrategyTest {
 	private CountReplacementStrategy strategy;
 
 	@Before
