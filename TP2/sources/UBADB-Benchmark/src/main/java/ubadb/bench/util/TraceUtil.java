@@ -116,6 +116,13 @@ public class TraceUtil {
 		}
 		return pinsPerPages;
 	}
+	
+	/**
+	 * generate a trace composed a sequence of randomly selected "pure" traces
+	 * @param numberOfTracesToConcat
+	 * @param pagesBySingleTrace
+	 * @return
+	 */
 	public PageReferenceTrace generateRandomTrace(int numberOfTracesToConcat,
 			int pagesBySingleTrace) {
 		// generator used to create all-concatenated different kinds of traces
