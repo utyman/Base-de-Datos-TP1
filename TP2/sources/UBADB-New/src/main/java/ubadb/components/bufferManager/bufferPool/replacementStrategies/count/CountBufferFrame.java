@@ -23,6 +23,7 @@ public final class CountBufferFrame extends BufferFrame {
 	 */
 	public CountBufferFrame(CountReplacementStrategy strategy, Page page) {
 		super(page);
+		this.strategy = strategy;
 	}
 	
 	/* (non-Javadoc)

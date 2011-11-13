@@ -42,7 +42,7 @@ public abstract class Test {
 
 		try {
 			for (int repeat = 0; repeat < repeats; repeat++) {
-				simulateTraces(bufferManager, trace);
+				simulateTraces(bufferManager, trace, strategy);
 			}
 			int totalReads = bufferManager.getReadsCount();
 			int diskReads = diskManager.getFaultsCount();
@@ -54,9 +54,10 @@ public abstract class Test {
 	}
 
 	private void simulateTraces(BufferManager bufferManager,
-			PageReferenceTrace trace) {
+			PageReferenceTrace trace, Strategy strategy) {
 		try {
 			for (PageReference pageReference : trace.getPageReferences()) {
+				strategy.executedRequest();
 				switch (pageReference.getType()) {
 				case REQUEST: {
 					bufferManager.readPage(pageReference.getPageId());

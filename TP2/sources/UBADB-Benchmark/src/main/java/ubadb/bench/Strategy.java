@@ -10,6 +10,7 @@ import ubadb.components.bufferManager.bufferPool.replacementStrategies.mru.MRURe
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.random.RandomReplacementStrategy;
 
 public class Strategy {
+
 	private final String name;
 	private final Class<? extends PageReplacementStrategy> clazz;
 
@@ -31,21 +32,37 @@ public class Strategy {
 		}
 	}
 
+	public void executedRequest() {
+
+	}
+
 	static final Strategy[] INSTANCES = new Strategy[] {
 			//
 			new Strategy("FIFO", FIFOReplacementStrategy.class),
 			new Strategy("Random", RandomReplacementStrategy.class),
 			new Strategy("MRU", MRUReplacementStrategy.class),
 			new Strategy("LRU", LRUReplacementStrategy.class),
-			new Strategy("Best", BestReplacementStrategy.class) {
-
-				@Override
-				public PageReplacementStrategy createStrategy(
-						PageReferenceTrace trace) {
-					return new BestReplacementStrategy(trace);
-				}
-
-			}, new Strategy("Count", CountReplacementStrategy.class)
+			new BestStrategy(),
+			new Strategy("Count", CountReplacementStrategy.class)
 	//
 	};
+
+	private static final class BestStrategy extends Strategy {
+
+		private BestReplacementStrategy strategy;
+
+		private BestStrategy() {
+			super("Best", BestReplacementStrategy.class);
+		}
+
+		@Override
+		public PageReplacementStrategy createStrategy(PageReferenceTrace trace) {
+			return strategy = new BestReplacementStrategy(trace);
+		}
+
+		@Override
+		public void executedRequest() {
+			strategy.nextPositionInTrace();
+		}
+	}
 }

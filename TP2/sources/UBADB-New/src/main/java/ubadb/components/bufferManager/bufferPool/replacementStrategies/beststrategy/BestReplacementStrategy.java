@@ -1,10 +1,12 @@
 package ubadb.components.bufferManager.bufferPool.replacementStrategies.beststrategy;
 
 import java.util.Collection;
+import java.util.List;
 
 import ubadb.apps.bufferManagement.PageReference;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
 import ubadb.common.Page;
+import ubadb.common.PageId;
 import ubadb.components.bufferManager.bufferPool.BufferFrame;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy;
 import ubadb.exceptions.PageReplacementStrategyException;
@@ -21,48 +23,53 @@ public class BestReplacementStrategy implements PageReplacementStrategy {
 		this.trace = trace;
 	}
 
-	/* (non-Javadoc)
-	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy#findVictim(java.util.Collection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.
+	 * PageReplacementStrategy#findVictim(java.util.Collection)
 	 */
 	public BufferFrame findVictim(Collection<BufferFrame> bufferFrames)
 			throws PageReplacementStrategyException {
 
 		BufferFrame victim = null;
-
-		int longerFutureRequestTime = -1;
+		int victimTime = Integer.MIN_VALUE;
 
 		for (BufferFrame bufferFrame : bufferFrames) {
-			int futureRequestTime = getFutureRequestTime(bufferFrame);
-			if (bufferFrame.canBeReplaced()
-					&& (futureRequestTime > longerFutureRequestTime)) {
-				victim = bufferFrame;
-				longerFutureRequestTime = futureRequestTime;
+			if (bufferFrame.canBeReplaced()) {
+				int bufferTime = getFutureRequestTime(bufferFrame);
+				if (bufferTime > victimTime) {
+					victim = bufferFrame;
+					victimTime = bufferTime;
+				}
 			}
 		}
-
-		if (victim == null)
+		if (victim == null) {
 			throw new PageReplacementStrategyException(
 					"No page can be removed from pool");
-		else
+		} else {
 			return victim;
+		}
 	}
 
 	public int getFutureRequestTime(BufferFrame bufferFrame) {
-		int position = 0;
-
-		for (PageReference pageReference : trace.getPageReferences()) {
-			if (position > positionInTrace
-					&& pageReference.getPageId().equals(
-							bufferFrame.getPage().getPageId())) {
-				break;
+		PageId pageId = bufferFrame.getPage().getPageId();
+		List<PageReference> pageReferences = trace.getPageReferences();
+		for (int position = positionInTrace + 1; position < pageReferences
+				.size(); position++) {
+			PageReference reference = pageReferences.get(position);
+			if (pageId.equals(reference.getPageId())) {
+				return position - positionInTrace;
 			}
-			position++;
 		}
-		return position - positionInTrace;
+		return Integer.MAX_VALUE;
 	}
 
-	/* (non-Javadoc)
-	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy#createNewFrame(ubadb.common.Page)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.
+	 * PageReplacementStrategy#createNewFrame(ubadb.common.Page)
 	 */
 	public BufferFrame createNewFrame(Page page) {
 		return new BufferFrame(page);
