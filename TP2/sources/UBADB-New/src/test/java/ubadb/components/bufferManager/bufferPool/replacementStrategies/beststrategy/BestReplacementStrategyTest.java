@@ -10,12 +10,8 @@ import org.junit.Test;
 import ubadb.apps.bufferManagement.PageReference;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
 import ubadb.apps.bufferManagement.PageReferenceType;
-import ubadb.common.PageId;
-import ubadb.common.TableId;
 import ubadb.components.bufferManager.bufferPool.BufferFrame;
-import ubadb.exceptions.PageReplacementStrategyException;
 import ubadb.mocks.MockObjectFactory;
-import ubadb.util.TestUtil;
 
 public class BestReplacementStrategyTest {
 	private BestReplacementStrategy strategy;

@@ -2,51 +2,44 @@ package ubadb.common;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class TableIdTest
-{
+public class TableIdTest {
 	@Test
-	public void equalsTrueSameObject()
-	{
+	public void equalsTrueSameObject() {
 		TableId tableId1 = new TableId("a.txt");
-		assertTrue(tableId1.equals(tableId1));
+		assertEquals(tableId1, tableId1);
 	}
-	
+
 	@Test
-	public void equalsTrueOtherObject()
-	{
+	public void equalsTrueOtherObject() {
 		TableId tableId1 = new TableId("a.txt");
 		TableId tableId2 = new TableId("a.txt");
-		
-		assertTrue(tableId1.equals(tableId2));
-		assertEquals(tableId1.hashCode(),tableId2.hashCode());
+
+		assertEquals(tableId1, tableId2);
+		assertEquals(tableId1.hashCode(), tableId2.hashCode());
 	}
-	
+
 	@Test
-	public void equalsFalseNullObject()
-	{
+	public void equalsFalseNullObject() {
 		TableId tableId1 = new TableId("a.txt");
-		
+
 		assertFalse(tableId1.equals(null));
 	}
 
 	@Test
-	public void equalsFalseDifferentType()
-	{
+	public void equalsFalseDifferentType() {
 		TableId tableId1 = new TableId("a.txt");
-		
+
 		assertFalse(tableId1.equals("aaaaaaaaaaaa"));
 	}
-	
+
 	@Test
-	public void equalsFalseDifferentObject()
-	{
+	public void equalsFalseDifferentObject() {
 		TableId tableId1 = new TableId("a.txt");
 		TableId tableId2 = new TableId("baaaaaaaaaaaaaaaa.txt");
-		
+
 		assertFalse(tableId1.equals(tableId2));
 	}
 }
