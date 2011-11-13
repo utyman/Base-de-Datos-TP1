@@ -6,7 +6,7 @@ import java.util.Date;
 import ubadb.common.Page;
 import ubadb.components.bufferManager.bufferPool.BufferFrame;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy;
-import ubadb.components.bufferManager.bufferPool.replacementStrategies.lru.LRUBufferFrame;
+import ubadb.components.bufferManager.bufferPool.util.DatedBufferFrame;
 import ubadb.exceptions.PageReplacementStrategyException;
 
 /**
@@ -22,19 +22,19 @@ public final class LRUReplacementStrategy implements PageReplacementStrategy
 	 */
 	public BufferFrame findVictim(Collection<BufferFrame> bufferFrames) 
 			throws PageReplacementStrategyException {
-		LRUBufferFrame victim = null;
+		DatedBufferFrame victim = null;
 		Date victimDate = null;		
 		for (BufferFrame bufferFrame : bufferFrames) {
 			// safe cast as we know all frames are of this type
-			LRUBufferFrame lruBufferFrame = (LRUBufferFrame) bufferFrame;
+			DatedBufferFrame DatedBufferFrame = (DatedBufferFrame) bufferFrame;
 			// If buffer cannot be replaced, ignore.
-			if (!lruBufferFrame.canBeReplaced()) {
+			if (!DatedBufferFrame.canBeReplaced()) {
 				continue;
 			}
 			// Compare with least recently used so far...
-			if (victimDate == null || lruBufferFrame.getLastUsed().before(victimDate)) {
-				victim = lruBufferFrame;
-				victimDate = lruBufferFrame.getLastUsed();
+			if (victimDate == null || DatedBufferFrame.getLastUsed().before(victimDate)) {
+				victim = DatedBufferFrame;
+				victimDate = DatedBufferFrame.getLastUsed();
 			}
 		}		
 		if (victim == null) {
@@ -47,6 +47,6 @@ public final class LRUReplacementStrategy implements PageReplacementStrategy
 	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy#createNewFrame(ubadb.common.Page)
 	 */
 	public BufferFrame createNewFrame(Page page) {
-		return new LRUBufferFrame(page);
+		return new DatedBufferFrame(page, false);
 	}
 }

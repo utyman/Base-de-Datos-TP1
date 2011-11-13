@@ -11,7 +11,7 @@ import ubadb.exceptions.BufferFrameException;
  * 
  * @author Grupo9
  */
-public class DatedBufferFrame extends BufferFrame {
+public final class DatedBufferFrame extends BufferFrame {
 
 	/**
 	 * Update on unpin flag. 
