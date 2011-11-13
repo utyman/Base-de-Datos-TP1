@@ -3,10 +3,14 @@ package ubadb.bench;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
-import ubadb.bench.tests.ConcatTest;
+import ubadb.apps.bufferManagement.PageReferenceTrace;
 import ubadb.bench.tests.Test;
 import ubadb.bench.tests.TestResult;
+import ubadb.bench.tests.TraceUtil;
 
 public class CompareStrategies {
 	public static void main(String[] args) {
@@ -17,38 +21,41 @@ public class CompareStrategies {
 		}
 	}
 
-	public static final Test[] TESTS = new Test[] {
-	//
-	// new FileScanTest(2, 5, 40), //
-	// new FileScanTest(5, 5, 40), //
-	// new FileScanTest(20, 50, 40),//
-	// //
-	// new IndexScanClusteredTest(3, 3, 3, 40), //
-	// new IndexScanClusteredTest(6, 3, 3, 40), //
-	// new IndexScanClusteredTest(10, 10, 10, 40), //
-	// //
-	// new IndexScanUnclusteredTest(3, 3, 3, 10, 40), //
-	// new IndexScanUnclusteredTest(6, 3, 3, 10, 40), //
-	// new IndexScanUnclusteredTest(5, 3, 10, 50, 40), //
-	// //
-	// new BNLJTest(5, 7, 2, 3, 40), //
-	// new BNLJTest(10, 7, 2, 3, 40), //
-	new ConcatTest(20, 20, 10, 1) };
+	private static final PageReferenceTrace TRACE = new TraceUtil()
+			.generateRandomTrace(10, 5);
+
+	private static final Test[] TESTS = new Test[] { new Test(
+			"Multiple operations", TRACE) };
 
 	void run(String args[]) throws FileNotFoundException {
 		PrintWriter csv = new PrintWriter(new FileOutputStream("output.csv"));
-		csv.println("Test,Strategy,TargetRate");
+		csv.println("Test,BufferSize,Strategy,Rate");
 		for (Test test : TESTS) {
-			System.out.println("Testing " + test.getName());
-			for (Strategy strategy : Strategy.INSTANCES) {
-				System.out.print("   Strategy: " + strategy.getName());
-				long init = System.currentTimeMillis();
-				TestResult result = test.test(strategy);
-				System.out.println(". Result: " + result + " ("
-						+ (System.currentTimeMillis() - init) + "ms)");
+			int minBufferSize = 10;
+			int maxBufferSize = 60;
+			Set<Integer> bufferSizes = new HashSet<Integer>();
+			bufferSizes.add(minBufferSize);
+			bufferSizes.add(maxBufferSize);
+			int count = 6;
+			for (int b = minBufferSize; b < maxBufferSize; b += (maxBufferSize - minBufferSize)
+					/ count) {
+				bufferSizes.add(b);
+			}
+			bufferSizes = new TreeSet<Integer>(bufferSizes);
+			System.out.println("Testing \"" + test.getName() + "\""
+					+ " with buffers: " + +maxBufferSize);
+			for (Integer bufferSize : bufferSizes) {
+				System.out.println("   BufferSize: " + bufferSize);
+				for (Strategy strategy : Strategy.INSTANCES) {
+					System.out.print("       Strategy: " + strategy.getName());
+					long init = System.currentTimeMillis();
+					TestResult result = test.test(strategy, bufferSize);
+					System.out.println(". Result: " + result + " ("
+							+ (System.currentTimeMillis() - init) + "ms)");
 
-				csv.println("\"" + test.getName() + "\"," + strategy.getName()
-						+ "," + result.hitRate());
+					csv.println("\"" + test.getName() + "\"," + bufferSize
+							+ "," + strategy.getName() + "," + result.hitRate());
+				}
 			}
 			System.out.println();
 		}
