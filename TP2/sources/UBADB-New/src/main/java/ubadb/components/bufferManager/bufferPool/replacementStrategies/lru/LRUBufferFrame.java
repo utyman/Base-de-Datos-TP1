@@ -4,32 +4,44 @@ import java.util.Date;
 
 import ubadb.common.Page;
 import ubadb.components.bufferManager.bufferPool.BufferFrame;
-import ubadb.exceptions.BufferFrameException;
 
-public class LRUBufferFrame extends BufferFrame
-{
+/**
+ * LRU based BufferFrame, keeps track of the last time the BufferFrame was pinned.
+ * 
+ * @author Grupo9
+ */
+public final class LRUBufferFrame extends BufferFrame {
+	
+	/**
+	 * Last time the BufferFrame was pinned or created.
+	 */
 	private Date lastUsed;
 	
-	public LRUBufferFrame(Page page)
-	{
+	/**
+	 * Creates a new LRUBufferFrame. 
+	 * 
+	 * @param page The page to hold.
+	 */
+	public LRUBufferFrame(Page page) {
 		super(page);
-		lastUsed = new Date();
+		this.lastUsed = new Date();
 	}
 	
-	public Date getLastUsed()
-	{
+	/**
+	 * Returns the last time the BufferFrame was pinned or created.
+	 * 
+	 * @return the last time the BufferFrame was pinned or created.
+	 */
+	public Date getLastUsed() {
 		return lastUsed;
 	}
 	
-	public void pin()
-	{
+	/* (non-Javadoc)
+	 * @see ubadb.components.bufferManager.bufferPool.BufferFrame#pin()
+	 */
+	public void pin() {
 		super.pin();
+		// Updates the used date.
 		lastUsed = new Date();
-	}
-
-	public void unpin() throws BufferFrameException
-	{
-		super.unpin();
-		lastUsed = new Date();
-	}
+	}	
 }

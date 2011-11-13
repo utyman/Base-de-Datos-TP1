@@ -12,6 +12,10 @@ import ubadb.components.bufferManager.bufferPool.BufferFrame;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy;
 import ubadb.exceptions.PageReplacementStrategyException;
 
+/**
+ * 
+ * @author Grupo9
+ */
 public class BestReplacementStrategy implements PageReplacementStrategy {
 	private Map<PageId, Integer> count = new HashMap<PageId, Integer>();
 
@@ -27,6 +31,9 @@ public class BestReplacementStrategy implements PageReplacementStrategy {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy#findVictim(java.util.Collection)
+	 */
 	public BufferFrame findVictim(Collection<BufferFrame> bufferFrames)
 			throws PageReplacementStrategyException {
 
@@ -49,6 +56,9 @@ public class BestReplacementStrategy implements PageReplacementStrategy {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy#createNewFrame(ubadb.common.Page)
+	 */
 	public BufferFrame createNewFrame(Page page) {
 		return new BufferFrame(page);
 	}

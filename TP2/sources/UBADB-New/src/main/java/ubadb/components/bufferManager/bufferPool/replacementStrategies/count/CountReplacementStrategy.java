@@ -57,15 +57,19 @@ public final class CountReplacementStrategy implements PageReplacementStrategy {
 		BufferFrame result = null;
 		int resultCount = Integer.MAX_VALUE;
 		for (BufferFrame frame : candidates) {
-			if (frame.canBeReplaced()) {
-				PageId id = frame.getPage().getPageId();
-				Integer c = count.get(id);
-				if (c == null || c >= resultCount) {
-					continue;
-				}
-				resultCount = c;
-				result = frame;
+			// If buffer cannot be replaced, ignore.
+			if (!frame.canBeReplaced()) {
+				continue;
 			}
+			// Check pin count for the page id being hold by the BufferFrame.
+			PageId id = frame.getPage().getPageId();
+			Integer c = count.get(id);
+			// Compare with highest count found so far...
+			if (c == null || c >= resultCount) {
+				continue;
+			}
+			resultCount = c;
+			result = frame;
 		}
 		return result;
 	}
