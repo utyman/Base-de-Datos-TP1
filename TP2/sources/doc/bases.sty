@@ -1,0 +1,75 @@
+
+
+\def\dotuline{\bgroup 
+  \ifdim\ULdepth=\maxdimen  % Set depth based on font, if not set already
+   \settodepth\ULdepth{(j}\advance\ULdepth.4pt\fi
+  \markoverwith{\begingroup
+  \advance\ULdepth0.08ex
+  \lower\ULdepth\hbox{\kern.15em .\kern.1em}%
+  \endgroup}\ULon}
+
+\def\dashuline{\bgroup 
+  \ifdim\ULdepth=\maxdimen  % Set depth based on font, if not set already
+   \settodepth\ULdepth{(j}\advance\ULdepth.4pt\fi
+  \markoverwith{\kern.15em
+  \vtop{\kern\ULdepth \hrule width .3em}%
+  \kern.15em}\ULon}
+
+
+
+\let\entityName\relax
+\newtoks\entityFields
+\newtoks\emptyList\emptyList={}
+
+\def\startEntity#1{
+  \def\entityName{#1}
+  \entityFields={}
+}
+\def\addEntityPk#1{
+  \addEntityField{\underline{#1}}
+}
+\def\addEntityFk#1{
+  \addEntityField{\dashuline{#1}}
+}
+\def\addEntityPkFk#1{
+  \addEntityField{\dashuline{\underline{#1}}}
+}
+\def\addEntityField#1{
+  \if &\the\entityFields&
+    \entityFields={#1}
+  \else
+    \entityFields=\expandafter{\the\entityFields, #1}
+  \fi
+}
+
+\def\printEntity#1{
+\begin{flushleft}
+  \textbf{\entityName}
+  ({\the\entityFields})
+  \\
+  {#1}
+\end{flushleft}
+}
+
+
+\def\modelRestrictionField#1{
+  \textit{#1}
+}
+
+\def\modelRestriction#1#2{
+  \modelRestrictionField{#1} {#2}
+}
+
+\def\modelRestrictionShouldBeIn#1#2{
+  \modelRestriction{#1}{ ``debe estar en'' \modelRestrictionField{#2}}
+}
+
+\def\modelRestrictionShouldBePK#1#2{
+  \modelRestriction{#1}{ ``debe ser PK de'' \modelRestrictionField{#2}}
+}
+
+\def\modelRestrictionShouldBeInOr#1#2#3{
+  \modelRestriction{{#1} ``debe estar en'' \modelRestrictionField{#2} o (exclusivo) \modelRestrictionField{#3}}
+}
+
+

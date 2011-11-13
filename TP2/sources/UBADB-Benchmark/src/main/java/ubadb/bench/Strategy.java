@@ -48,8 +48,4 @@ public class Strategy {
 			}, new Strategy("Count", CountReplacementStrategy.class)
 	//
 	};
-
-	// public DatabaseInstance createInstance() {
-	// return DatabaseInstance.fromSpring(springFile);
-	// }
 }
