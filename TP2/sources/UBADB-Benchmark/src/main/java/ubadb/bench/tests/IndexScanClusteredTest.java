@@ -1,12 +1,6 @@
 package ubadb.bench.tests;
 
-import java.util.Random;
-
-import ubadb.apps.bufferManagement.PageReference;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
-import ubadb.apps.bufferManagement.PageReferenceType;
-import ubadb.common.PageId;
-import ubadb.common.TableId;
 
 public class IndexScanClusteredTest extends Test {
 
@@ -23,6 +17,7 @@ public class IndexScanClusteredTest extends Test {
 
 	@Override
 	protected PageReferenceTrace createTraces() {
-		return (new TraceUtil()).createTraceScanClustered(indexLevels, resultSize);
+		return new TraceUtil()
+				.createTraceScanClustered(indexLevels, resultSize);
 	}
 }

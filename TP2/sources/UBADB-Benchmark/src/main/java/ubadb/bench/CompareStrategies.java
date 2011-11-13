@@ -4,10 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
-import ubadb.bench.tests.BNLJTest;
-import ubadb.bench.tests.FileScanTest;
-import ubadb.bench.tests.IndexScanClusteredTest;
-import ubadb.bench.tests.IndexScanUnclusteredTest;
+import ubadb.bench.tests.ConcatTest;
 import ubadb.bench.tests.Test;
 import ubadb.bench.tests.TestResult;
 
@@ -21,22 +18,22 @@ public class CompareStrategies {
 	}
 
 	public static final Test[] TESTS = new Test[] {
-			//
-			new FileScanTest(2, 5, 40), //
-			new FileScanTest(5, 5, 40), //
-			new FileScanTest(20, 50, 40),//
-			//
-			new IndexScanClusteredTest(3, 3, 3, 40), //
-			new IndexScanClusteredTest(6, 3, 3, 40), //
-			new IndexScanClusteredTest(10, 10, 10, 40), //
-			//
-			new IndexScanUnclusteredTest(3, 3, 3, 10, 40), //
-			new IndexScanUnclusteredTest(6, 3, 3, 10, 40), //
-			new IndexScanUnclusteredTest(5, 3, 10, 50, 40), //
-			//
-			new BNLJTest(5, 7, 2, 3, 40), //
-			new BNLJTest(10, 7, 2, 3, 40), //
-	};
+	//
+	// new FileScanTest(2, 5, 40), //
+	// new FileScanTest(5, 5, 40), //
+	// new FileScanTest(20, 50, 40),//
+	// //
+	// new IndexScanClusteredTest(3, 3, 3, 40), //
+	// new IndexScanClusteredTest(6, 3, 3, 40), //
+	// new IndexScanClusteredTest(10, 10, 10, 40), //
+	// //
+	// new IndexScanUnclusteredTest(3, 3, 3, 10, 40), //
+	// new IndexScanUnclusteredTest(6, 3, 3, 10, 40), //
+	// new IndexScanUnclusteredTest(5, 3, 10, 50, 40), //
+	// //
+	// new BNLJTest(5, 7, 2, 3, 40), //
+	// new BNLJTest(10, 7, 2, 3, 40), //
+	new ConcatTest(20, 20, 10, 1) };
 
 	void run(String args[]) throws FileNotFoundException {
 		PrintWriter csv = new PrintWriter(new FileOutputStream("output.csv"));

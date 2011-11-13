@@ -1,10 +1,6 @@
 package ubadb.bench.tests;
 
-import ubadb.apps.bufferManagement.PageReference;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
-import ubadb.apps.bufferManagement.PageReferenceType;
-import ubadb.common.PageId;
-import ubadb.common.TableId;
 
 public class FileScanTest extends Test {
 
@@ -18,8 +14,8 @@ public class FileScanTest extends Test {
 
 	@Override
 	protected PageReferenceTrace createTraces() {
-		return (new TraceUtil()).createTracesFileScan(pages);
-		
+		return new TraceUtil().createTracesFileScan(pages);
+
 	}
 
 }

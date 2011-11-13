@@ -1,10 +1,6 @@
 package ubadb.bench.tests;
 
-import ubadb.apps.bufferManagement.PageReference;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
-import ubadb.apps.bufferManagement.PageReferenceType;
-import ubadb.common.PageId;
-import ubadb.common.TableId;
 
 public class BNLJTest extends Test {
 
@@ -22,7 +18,8 @@ public class BNLJTest extends Test {
 
 	@Override
 	protected PageReferenceTrace createTraces() {
-		return (new TraceUtil()).createTracesBNLJ(firstCount, secondCount, blocks);
+		return new TraceUtil()
+				.createTracesBNLJ(firstCount, secondCount, blocks);
 	}
 
 }
