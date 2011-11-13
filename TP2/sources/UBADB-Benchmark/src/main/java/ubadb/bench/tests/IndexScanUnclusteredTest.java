@@ -2,6 +2,7 @@ package ubadb.bench.tests;
 
 import java.util.Random;
 
+
 import ubadb.apps.bufferManagement.PageReference;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
 import ubadb.apps.bufferManagement.PageReferenceType;
@@ -24,17 +25,7 @@ public class IndexScanUnclusteredTest extends Test {
 
 	@Override
 	protected PageReferenceTrace createTraces() {
-		Random random = new Random(314);
-		PageReferenceTrace trace = new PageReferenceTrace();
-		FileScanTest.addScan("A_index", 0, indexLevels, trace);
-		for (int i = 0; i < resultSize; i++) {
-			int page = random.nextInt(resultPages);
-			trace.addPageReference(new PageReference(new PageId(page,
-					new TableId("A")), PageReferenceType.REQUEST));
-			trace.addPageReference(new PageReference(new PageId(page,
-					new TableId("A")), PageReferenceType.RELEASE));
-		}
-		return trace;
+		return (new TraceUtil()).createTraceScanUnclustered(indexLevels, resultSize, resultPages);
 	}
 
 }

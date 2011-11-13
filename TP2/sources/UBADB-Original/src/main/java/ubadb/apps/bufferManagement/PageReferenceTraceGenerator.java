@@ -1,5 +1,6 @@
 package ubadb.apps.bufferManagement;
 
+import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -106,6 +107,7 @@ public class PageReferenceTraceGenerator
 		return ret;
 	}
 	
+	
 	public static void main(String[] args)
 	{
 		PageReferenceTraceGenerator gen = new PageReferenceTraceGenerator();
@@ -114,4 +116,6 @@ public class PageReferenceTraceGenerator
 //		System.out.println(gen.generateIndexScanUnclustered("A", 3, 3, 10));
 		System.out.println(gen.generateBNLJ("A", 7, "B", 2, 3));
 	}
+	
+	
 }
