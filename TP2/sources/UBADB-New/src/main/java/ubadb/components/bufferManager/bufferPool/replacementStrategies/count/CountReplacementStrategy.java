@@ -69,10 +69,7 @@ public final class CountReplacementStrategy implements PageReplacementStrategy {
 			}
 			// Check pin count for the page id being hold by the BufferFrame.
 			PageId id = frame.getPage().getPageId();
-			Integer c = count.get(id);
-			if (c == null) {
-				c = 0;
-			}
+			int c = getCount(id);
 			// Compare with highest count found so far...
 			if (c <= resultCount) {
 				resultCount = c;
@@ -90,5 +87,19 @@ public final class CountReplacementStrategy implements PageReplacementStrategy {
 	 */
 	public BufferFrame createNewFrame(Page page) {
 		return new CountBufferFrame(this, page);
+	}
+
+	/**
+	 * Returns the total pin count for the pageId given.
+	 * 
+	 * @param pageId the pageId.
+	 * @return the total pin count for the pageId given.
+	 */
+	public int getCount(PageId pageId) {
+		Integer c = count.get(pageId);
+		if (c == null) {
+			c = 0;
+		}
+		return c.intValue();
 	}
 }
