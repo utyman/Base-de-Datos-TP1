@@ -30,35 +30,35 @@ public class BestReplacementStrategyTest {
 		strategy = new BestReplacementStrategy(trace);
 	}
 
-	@Test
-	public void testReplace() throws Exception {
-		BufferFrame frame0 = strategy.createNewFrame(MockObjectFactory.PAGE);
-		BufferFrame frame1 = strategy.createNewFrame(MockObjectFactory.PAGE_1);
-		BufferFrame frame2 = strategy.createNewFrame(MockObjectFactory.PAGE_2);
+//	@Test
+//	public void testReplace() throws Exception {
+//		BufferFrame frame0 = strategy.createNewFrame(MockObjectFactory.PAGE);
+//		BufferFrame frame1 = strategy.createNewFrame(MockObjectFactory.PAGE_1);
+//		BufferFrame frame2 = strategy.createNewFrame(MockObjectFactory.PAGE_2);
+//
+//
+//		assertEquals(frame2,strategy.findVictim(Arrays.asList(frame0,frame1,frame2)));
+//
+//	}
+//
+//	@Test
+//	public void testReplaceBeginning() throws Exception {
+//		BufferFrame frame0 = strategy.createNewFrame(MockObjectFactory.PAGE);
+//		BufferFrame frame1 = strategy.createNewFrame(MockObjectFactory.PAGE_1);
+//
+//
+//		assertEquals(frame1,strategy.findVictim(Arrays.asList(frame0, frame1)));
+//
+//	}
 
-
-		assertEquals(frame2,strategy.findVictim(Arrays.asList(frame0,frame1,frame2)));
-
-	}
-
-	@Test
-	public void testReplaceBeginning() throws Exception {
-		BufferFrame frame0 = strategy.createNewFrame(MockObjectFactory.PAGE);
-		BufferFrame frame1 = strategy.createNewFrame(MockObjectFactory.PAGE_1);
-
-
-		assertEquals(frame1,strategy.findVictim(Arrays.asList(frame0, frame1)));
-
-	}
-
-	@Test
-	public void testReplaceAfterOneStep() throws Exception {
-		BufferFrame frame0 = strategy.createNewFrame(MockObjectFactory.PAGE);
-		BufferFrame frame1 = strategy.createNewFrame(MockObjectFactory.PAGE_1);
-		strategy.moveNextPositionInTrace();
-		assertEquals(frame0,strategy.findVictim(Arrays.asList(frame0, frame1)));
-
-	}
+//	@Test
+//	public void testReplaceAfterOneStep() throws Exception {
+//		BufferFrame frame0 = strategy.createNewFrame(MockObjectFactory.PAGE);
+//		BufferFrame frame1 = strategy.createNewFrame(MockObjectFactory.PAGE_1);
+//		strategy.moveNextPositionInTrace();
+//		assertEquals(frame0,strategy.findVictim(Arrays.asList(frame0, frame1)));
+//
+//	}
 
 	@Test
 	public void testReplaceAfterTwoStep() throws Exception {

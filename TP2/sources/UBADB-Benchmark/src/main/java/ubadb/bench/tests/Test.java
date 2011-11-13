@@ -10,28 +10,24 @@ import ubadb.components.bufferManager.bufferPool.BufferPool;
 import ubadb.components.bufferManager.bufferPool.SingleBufferPool;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy;
 
-public abstract class Test {
+public class Test {
 
 	private static final long PAUSE_BETWEEN_REFERENCES = 2;
 
 	private final String name;
-	private final int bufferPoolSize;
-	private final int repeats;
+	private final PageReferenceTrace trace;
 
-	public Test(String name, int bufferPoolSize, int repeats) {
+	public Test(String name, PageReferenceTrace trace) {
 		super();
 		this.name = name;
-		this.repeats = repeats;
-		this.bufferPoolSize = bufferPoolSize;
+		this.trace = trace;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public final TestResult test(Strategy strategy) {
-		PageReferenceTrace trace = createRepeatedTrace();
-
+	public final TestResult test(Strategy strategy, int bufferPoolSize) {
 		PageReplacementStrategy replacementStrategy = strategy
 				.createStrategy(trace);
 		DiskManagerFaultCounterMock diskManager = new DiskManagerFaultCounterMock();
@@ -49,17 +45,6 @@ public abstract class Test {
 			return new TestResult(e);
 		}
 
-	}
-
-	private PageReferenceTrace createRepeatedTrace() {
-		PageReferenceTrace result = new PageReferenceTrace();
-		PageReferenceTrace singleTrace = createTraces();
-		for (int repeat = 0; repeat < repeats; repeat++) {
-			for (PageReference pageReference : singleTrace.getPageReferences()) {
-				result.addPageReference(pageReference);
-			}
-		}
-		return result;
 	}
 
 	private void simulateTraces(BufferManager bufferManager,
@@ -86,6 +71,8 @@ public abstract class Test {
 
 	}
 
-	protected abstract PageReferenceTrace createTraces();
+	public PageReferenceTrace getTrace() {
+		return trace;
+	}
 
 }

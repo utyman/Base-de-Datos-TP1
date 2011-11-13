@@ -12,6 +12,7 @@ import ubadb.exceptions.PageReplacementStrategyException;
 
 /**
  * PageReplacementStrategy based on total historic count of pins per page id.
+ * This strategy is known as "Not frequently used"
  * 
  * @author Grupo9
  */
@@ -22,8 +23,11 @@ public final class CountReplacementStrategy implements PageReplacementStrategy {
 	 */
 	private Map<PageId, Integer> count = new HashMap<PageId, Integer>();
 
-	/* (non-Javadoc)
-	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy#findVictim(java.util.Collection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.
+	 * PageReplacementStrategy#findVictim(java.util.Collection)
 	 */
 	public BufferFrame findVictim(Collection<BufferFrame> bufferFrames)
 			throws PageReplacementStrategyException {
@@ -36,7 +40,8 @@ public final class CountReplacementStrategy implements PageReplacementStrategy {
 	/**
 	 * Counts a page pin.
 	 * 
-	 * @param id the pinned page id.
+	 * @param id
+	 *            the pinned page id.
 	 */
 	void countPin(PageId id) {
 		Integer c = count.get(id);
@@ -50,7 +55,8 @@ public final class CountReplacementStrategy implements PageReplacementStrategy {
 	/**
 	 * Return the bufferframe holding the less pinned page.
 	 * 
-	 * @param candidates the bufferframe candidates for removal.
+	 * @param candidates
+	 *            the bufferframe candidates for removal.
 	 * @return the less counted bufferframe holding the less pinned page.
 	 */
 	private BufferFrame lessCounted(Collection<BufferFrame> candidates) {
@@ -76,8 +82,11 @@ public final class CountReplacementStrategy implements PageReplacementStrategy {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy#createNewFrame(ubadb.common.Page)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.
+	 * PageReplacementStrategy#createNewFrame(ubadb.common.Page)
 	 */
 	public BufferFrame createNewFrame(Page page) {
 		return new CountBufferFrame(this, page);

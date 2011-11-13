@@ -18,9 +18,22 @@ medir la eficiencia de las estrategias mencionadas. Este proyecto depende del an
   
    
 \subsection{Estrategias nuevas}
-Hablar de la que habia: FIFO.
-Hablar de MRU y LRU. Hablar de las otras nuevas hechas por nosotros (random, best, count) 
-(fabian?)
+La \'unica estrategia existente en el c\'odigo provisto por la c\'atedra correpondia a la estrategia FIFO 
+(el primero en entrar es el primero en salir). Las estrategias implementadas por el grupo tomaron como base esta
+implementaci\'on de dos clases: una para la estrategia y otra para agregarle informaci\'on al \textit{BufferFrame}.
+\begin{itemize}
+\item \textbf{MRU}: ... 
+\item \textbf{LRU}: ...
+\item \textbf{Count}: Esta estrategia lleva una contabilidad de los pedidos a c\'ada p\'agina y para elegir la v\'ictima, escoge 
+la p\'agina menos pedida hasta el momento. Por esto se la conce como ``No usada frecuentemente'' o NFU.
+\item \textbf{Best}: Esta estrategia implementa el algoritmo de reemplazo de p\'agina \'optimo de \textit{Belady}. Esta estrategia 
+utiliza el conociemiento de la sequencia completa de pedidos antes de ser ejecutada, por lo tanto no es \'util desde el punto de vista pr\'actico
+pero si para comparar con el resto de las estrategias.  
+\item \textbf{Random}: La estrategia random devuelve como v\'ictima un frame al azar, ser\'a usada para 
+comprar eficiencia con otras estrategias.
+\end{itemize}
+Para seguir manteniendo el orden de c\'odigo estas estrategias se implementaron cada un en un sub-paquete de java propio 
+bajo \textit{ubadb.components.bufferManager.bufferPool.replacementStrategies}.
 
 \subsection{Tests de unidad}
 aca hay que hablar de junit y los junits que hicimos para testear, que testean cada cosa.
