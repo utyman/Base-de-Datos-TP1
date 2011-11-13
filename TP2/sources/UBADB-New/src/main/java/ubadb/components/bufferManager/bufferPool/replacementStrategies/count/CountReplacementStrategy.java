@@ -10,10 +10,21 @@ import ubadb.components.bufferManager.bufferPool.BufferFrame;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy;
 import ubadb.exceptions.PageReplacementStrategyException;
 
-public class CountReplacementStrategy implements PageReplacementStrategy {
+/**
+ * PageReplacementStrategy based on total historic count of pins per page id.
+ * 
+ * @author Grupo9
+ */
+public final class CountReplacementStrategy implements PageReplacementStrategy {
 
+	/**
+	 * Total count of pins by pageId.
+	 */
 	private Map<PageId, Integer> count = new HashMap<PageId, Integer>();
 
+	/* (non-Javadoc)
+	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy#findVictim(java.util.Collection)
+	 */
 	public BufferFrame findVictim(Collection<BufferFrame> bufferFrames)
 			throws PageReplacementStrategyException {
 		BufferFrame victim = lessCounted(bufferFrames);
@@ -22,7 +33,12 @@ public class CountReplacementStrategy implements PageReplacementStrategy {
 		return victim;
 	}
 
-	private void pinBuffer(PageId id) {
+	/**
+	 * Counts a page pin.
+	 * 
+	 * @param id the pinned page id.
+	 */
+	void countPin(PageId id) {
 		Integer c = count.get(id);
 		if (c == null) {
 			c = 0;
@@ -31,6 +47,12 @@ public class CountReplacementStrategy implements PageReplacementStrategy {
 		count.put(id, c);
 	}
 
+	/**
+	 * Return the bufferframe holding the less pinned page.
+	 * 
+	 * @param candidates the bufferframe candidates for removal.
+	 * @return the less counted bufferframe holding the less pinned page.
+	 */
 	private BufferFrame lessCounted(Collection<BufferFrame> candidates) {
 		BufferFrame result = null;
 		int resultCount = Integer.MAX_VALUE;
@@ -41,12 +63,6 @@ public class CountReplacementStrategy implements PageReplacementStrategy {
 				if (c == null || c >= resultCount) {
 					continue;
 				}
-				// if (c.intValue() == resultCount) {
-				// PageId resultId = result.getPage().getPageId();
-				// if (id.hashCode() > resultId.hashCode()) {
-				// continue;
-				// }
-				// }
 				resultCount = c;
 				result = frame;
 			}
@@ -54,16 +70,10 @@ public class CountReplacementStrategy implements PageReplacementStrategy {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy#createNewFrame(ubadb.common.Page)
+	 */
 	public BufferFrame createNewFrame(Page page) {
-		return new BufferFrame(page) {
-
-			@Override
-			public void pin() {
-				super.pin();
-				pinBuffer(getPage().getPageId());
-			}
-
-		};
+		return new CountBufferFrame(this, page);
 	}
-
 }
