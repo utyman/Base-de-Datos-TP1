@@ -1,56 +1,65 @@
 package ubadb.components.bufferManager.bufferPool.replacementStrategies.beststrategy;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import ubadb.apps.bufferManagement.PageReference;
 import ubadb.apps.bufferManagement.PageReferenceTrace;
 import ubadb.common.Page;
-import ubadb.common.PageId;
 import ubadb.components.bufferManager.bufferPool.BufferFrame;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.PageReplacementStrategy;
 import ubadb.exceptions.PageReplacementStrategyException;
 
 public class BestReplacementStrategy implements PageReplacementStrategy {
-	private Map<PageId, Integer> count = new HashMap<PageId, Integer>();
+	private PageReferenceTrace trace;
+	private int positionInTrace = -1;
 
-	public BestReplacementStrategy(PageReferenceTrace trace) {
-		for (PageReference page : trace.getPageReferences()) {
-			PageId id = page.getPageId();
-			Integer c = count.get(id);
-			if (c == null) {
-				c = 0;
-			}
-			c++;
-			count.put(id, c);
-		}
+	BestReplacementStrategy(PageReferenceTrace trace) {
+		this.trace = trace;
 	}
 
 	public BufferFrame findVictim(Collection<BufferFrame> bufferFrames)
 			throws PageReplacementStrategyException {
 
 		BufferFrame victim = null;
-		int victimCount = Integer.MAX_VALUE;
-		for (BufferFrame frame : bufferFrames) {
-			if (frame.canBeReplaced()) {
-				int bufferCount = count.get(frame.getPage().getPageId());
-				if (bufferCount < victimCount) {
-					victim = frame;
-					victimCount = bufferCount;
-				}
+
+		int longerFutureRequestTime = -1;
+
+		for (BufferFrame bufferFrame : bufferFrames) {
+			int futureRequestTime = getFutureRequestTime(bufferFrame);
+			if (bufferFrame.canBeReplaced()
+					&& (futureRequestTime > longerFutureRequestTime)) {
+				victim = bufferFrame;
+				longerFutureRequestTime = futureRequestTime;
 			}
 		}
-		if (victim == null) {
+
+		if (victim == null)
 			throw new PageReplacementStrategyException(
 					"No page can be removed from pool");
-		} else {
+		else
 			return victim;
+	}
+
+	public int getFutureRequestTime(BufferFrame bufferFrame) {
+		int position = 0;
+
+		for (PageReference pageReference : trace.getPageReferences()) {
+			if (position > positionInTrace
+					&& pageReference.getPageId().equals(
+							bufferFrame.getPage().getPageId())) {
+				break;
+			}
+			position++;
 		}
+		return position - positionInTrace;
 	}
 
 	public BufferFrame createNewFrame(Page page) {
 		return new BufferFrame(page);
+	}
+
+	public void nextPositionInTrace() {
+		positionInTrace++;
 	}
 
 }
