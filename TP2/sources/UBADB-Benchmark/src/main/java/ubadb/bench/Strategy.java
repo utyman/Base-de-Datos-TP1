@@ -62,7 +62,7 @@ public class Strategy {
 
 		@Override
 		public void executedRequest() {
-			strategy.nextPositionInTrace();
+			strategy.moveNextPositionInTrace();
 		}
 	}
 }
