@@ -13,7 +13,7 @@ public class BestReplacementStrategy implements PageReplacementStrategy {
 	private PageReferenceTrace trace;
 	private int positionInTrace = -1;
 
-	BestReplacementStrategy(PageReferenceTrace trace) {
+	public BestReplacementStrategy(PageReferenceTrace trace) {
 		this.trace = trace;
 	}
 
