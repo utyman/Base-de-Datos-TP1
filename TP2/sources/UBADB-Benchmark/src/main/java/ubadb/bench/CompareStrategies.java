@@ -21,29 +21,34 @@ public class CompareStrategies {
 		}
 	}
 
-	private static final PageReferenceTrace TRACE = new TraceUtil()
-			.generateRandomTrace(10, 5);
+	private static final PageReferenceTrace TRACE_SMALL = TraceUtil
+			.generateRandomTrace(100, 3);
 
-	private static final Test[] TESTS = new Test[] { new Test(
-			"Multiple operations", TRACE) };
+	private static final PageReferenceTrace TRACE_BIG = TraceUtil
+			.generateRandomTrace(1000, 10);
+
+	private static final Test[] TESTS = new Test[] {
+			new Test("SMALL", TRACE_SMALL), new Test("BIG", TRACE_BIG) };
 
 	void run(String args[]) throws FileNotFoundException {
 		PrintWriter csv = new PrintWriter(new FileOutputStream("output.csv"));
 		csv.println("Test,BufferSize,Strategy,Rate");
 		for (Test test : TESTS) {
-			int minBufferSize = 10;
-			int maxBufferSize = 60;
+			int minBufferSize = TraceUtil.calculateMaxPinned(test.getTrace());
+			int maxBufferSize = TraceUtil.calculateNumberOfDifferentPages(test
+					.getTrace());
 			Set<Integer> bufferSizes = new HashSet<Integer>();
 			bufferSizes.add(minBufferSize);
 			bufferSizes.add(maxBufferSize);
-			int count = 6;
-			for (int b = minBufferSize; b < maxBufferSize; b += (maxBufferSize - minBufferSize)
-					/ count) {
+			int count = 15;
+			int delta = Math.max(1, (maxBufferSize - minBufferSize) / count);
+			for (int b = minBufferSize; b < maxBufferSize; b += delta) {
 				bufferSizes.add(b);
 			}
 			bufferSizes = new TreeSet<Integer>(bufferSizes);
-			System.out.println("Testing \"" + test.getName() + "\""
-					+ " with buffers: " + +maxBufferSize);
+			System.out.println("Testing \"" + test.getName() + "\" of size "
+					+ test.getTrace().getPageReferences().size()
+					+ " calls, with buffers: " + bufferSizes);
 			for (Integer bufferSize : bufferSizes) {
 				System.out.println("   BufferSize: " + bufferSize);
 				for (Strategy strategy : Strategy.INSTANCES) {
