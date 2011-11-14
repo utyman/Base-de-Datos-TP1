@@ -25,7 +25,7 @@ public class CompareStrategies {
 			.generateRandomTrace(100, 3);
 
 	private static final PageReferenceTrace TRACE_BIG = TraceUtil
-			.generateRandomTrace(1000, 10);
+			.generateRandomTrace(1000, 15);
 
 	private static final Test[] TESTS = new Test[] {
 			new Test("SMALL", TRACE_SMALL), new Test("BIG", TRACE_BIG) };
@@ -40,7 +40,7 @@ public class CompareStrategies {
 			Set<Integer> bufferSizes = new HashSet<Integer>();
 			bufferSizes.add(minBufferSize);
 			bufferSizes.add(maxBufferSize);
-			int count = 15;
+			int count = 11;
 			int delta = Math.max(1, (maxBufferSize - minBufferSize) / count);
 			for (int b = minBufferSize; b < maxBufferSize; b += delta) {
 				bufferSizes.add(b);
@@ -62,6 +62,7 @@ public class CompareStrategies {
 							+ "," + strategy.getName() + "," + result.hitRate());
 				}
 			}
+			csv.flush();
 			System.out.println();
 		}
 		csv.flush();
