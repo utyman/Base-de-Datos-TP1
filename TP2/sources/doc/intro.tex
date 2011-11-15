@@ -1,7 +1,15 @@
 \section{Introducci\'on}
 
-El siguiente trabajo se propone realizar un an\'alisis comparativo de las estrategias de sustituci\'on de p\'aginas en el manejo de buffer en base de datos. 
+El siguiente trabajo se propone realizar un an\'alisis comparativo de las estrategias de sustituci\'on de p\'aginas 
+en el manejo de buffer en base de datos. 
 
-Las estrategias consideradas son MRU, LRU y Count. Asimismo, como marco de referencia para evaluar individualmente cada una de las estrategias, implementamos dos t\'ecnicas m\'as, implausibles en la pr\'actica: la estrategia \'optima (OPT), que sirve como una cota superior del \textit{hit rate} de todas las estrategias a evaluar; y, en segundo lugar, una estrategia (RANDOM) que elige aleatoriamente la p\'agina a sustituir.
+Las estrategias consideradas son \textbf{FIFO} (provista por la c\'atedra), \textbf{MRU}, \textbf{LRU} y \textbf{Count} (conocida como NFU o ``no usado frecuentemente'' \cite{wiki1}). Asimismo, 
+como marco de referencia para evaluar individualmente cada una de las estrategias, se implementaron dos t\'ecnicas m\'as, 
+implausibles en la pr\'actica: la estrategia \'optima de Belady \cite{bel66} llamada \textbf{Best} y una estrategia 
+estrategia aleatoria, llamada \textbf{Random} que supone tambi\'en una cota inferior.
 
-En la siguiente secci\'on, presentamos las estrategias que se consideraron, as\'i como los detalles de implementaci\'on. Posteriormente, mostramos la forma en que testeamos la correctitud de las estrategias implementadas. En la secci\'on de An\'alisis indicamos los mediciones hechas para comparar las diferentes estrategias. En la pen\'ultima secci\'on indicamos las trazas creadas y finalmente exponemos gr\'aficamente los resultados, junto a las conclusiones relevantes.
+En la siguiente secci\'on, presentamos las estrategias que se consideraron, as\'i como los detalles de implementaci\'on. 
+Posteriormente, se muestra la forma en que se probaron la correctitud de las estrategias implementadas. 
+En la secci\'on de ``An\'alisis'' se muestran las mediciones hechas para comparar las diferentes estrategias. 
+En la pen\'ultima secci\'on se describen las trazas creadas y finalmente se exponen gr\'aficamente los resultados, 
+junto a las conclusiones relevantes.

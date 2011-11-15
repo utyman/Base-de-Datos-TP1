@@ -1,27 +1,52 @@
 \section{An\'alisis}
 
 \subsection{Mediciones realizadas}
-Se realizaron principalmente dos pruebas:
-
+Se utilizaron tres ``trazas'' de sequencias de llamados (\textit{request} y \textit{release}):   
 \begin{itemize}
-\item \textbf{BNLJ}: se trata de una traza que simula el comportamiento de un algoritmo BNLJ para evaluar un join. El outer join consta de 400 p\'aginas, mientras que el inner join comprende 500 p\'aginas. Entre los tipos de traza \textit{puros} propuestos por el enunciado, nos pareci\'o oportuno tomar separadamente este caso, ya que es el \'unico que, considerado individualmente, vuelve a referenciar p\'aginas m\'as de una vez. 
-\item \textbf{Concatenado Random Small}: se trata de una traza compuesta por una concatenaci\'on secuencial de las trazas b\'asicas del enunciado (File Scan, Index Scan Clustered, Index Scan Unclustered, BNLJ). Se obtienen 100 trazas de tipo aleatoriamente elegido entre los b\'asicos con una cantidad de 3 p\'aginas a buscar y se genera la traza por concatenaci\'on. La generaci\'on de la traza se encuentra implementada en la clase \textit{TraceUtil} en el m\'etodo \textit{generateRandomTrace}.
-\item \textbf{Concatenado Random Big}: sigue el mismo esquema que \textbf{Concatenado Random Small} pero 1000 trazas b\'asicas y 15 p\'aginas.
-
-
+\item \textbf{BNLJ}: se trata de una traza que simula el comportamiento de un algoritmo BNLJ para evaluar un join. 
+El outer join consta de 400 p\'aginas, mientras que el inner join comprende 500 p\'aginas. 
+Entre los tipos de traza \textit{puros} propuestos en el enunciado, este fu\'e el \'unico considerado individualmente, 
+ya que vuelve a referenciar las mismas p\'aginas m\'as de una vez y tiene un compartemiento mas complejo que 
+el ``Index Scan Uncluestered''. 
+\item \textbf{Concatenado Aleatorio ``Small''}: se trata de una traza compuesta por una concatenaci\'on secuencial de 
+las trazas b\'asicas del enunciado: \textit{File Scan}, \textit{Index Scan Clustered}, \textit{Index Scan Unclustered} 
+y \textit{BNLJ}. Se generan 100 trazas aleatorias considerando instancias de estos cuatro tipos de trazas ``b\'asicos'',
+siendo estas instancias relativamente pequeñas, generando una cantidad 900 pedidos en total, aproximadamente 9 por instancia). 
+\item \textbf{Concatenado Aleatorio - ``Big''}: sigue el mismo esquema que el anterior pero sumando 1000 trazas b\'asicas y
+generando unos 88.000 pedidos en total, aproximadamente 90 por instancia.
 \end{itemize}
 
-La evaluaci\'on de las p\'aginas se encuentra implementada en la clase \textit{CompareStrategies} del paquete \textit{ubadb.bench}. Se genera una salida en un cvs y en los archivos adjuntos tambi\'en ofrecemos un odt para una lectura m\'as c\'omoda de los resultados.
+Cada estrategia considerada: Best, Random, MRU, LRU, FIFO y Count y para cada una de estas tres trazas propuestas se
+midi\'o el \textit{hit rate} con distintos tama\~nos de de buffer. 
 
-Vali\'endonos de las funciones \textit{calculateMaxPinned} y \textit{calculateNumberOfDifferentPages}, pudimos establecer el m\'inimo tama\~no de bloque necesario para evitar casos en los que no se puede reemplazar ninguna p\'agina \footnote{ya que est\'an todas pinneadas}; y el m\'aximo relevante ya que si fuera mayor no se tendr\'ia que reemplazar ninguna p\'agina. Estas funciones se encuentran implementadas en la clase \textit{TraceUtil}.
+\subsubsection{Par\'ametros de la mediciones}
+Para determinas los distintos tama\~nos de buffer se consideraron dos cotas que dependen de la traza y una decena de valores
+intermedios entre ellos como se sugiere en \cite{eff84}. Ambas magnitudes (cota superior e inferior) son calculadas en la cĺase ``TraceUtil''
+mencionada anteriormente.
 
-En los gr\'aficos siguientes tenemos sobre el eje x el porcentaje que va desde el m\'inimo antedicho y el m\'aximo (que corresponde al 100), y en eje y el \textit{hit rate} explicitado anteriormente. 
+\subsubsection*{Cota superior}
+El tama\~no de buffer m\'aximo considerado para una determinada traza es la cantidad de p\'aginas distintas que se solicitan. Un buffer
+de mayor capacidad que esta cantidad tendr\'ia siempre espacio libre.  
+
+\subsubsection*{Cota inferior}
+El tama\~no de buffer m\'inimo considerado para una determinada traza es la mayor cantidad de p\'aginas distintas que est\'an ``solicititadas''
+en un determinado momento. Un buffer de menor tama\~no que esta cantidad no podr\'ia alamacenar todas las p\'aginas necesarias para la ejecuci\'on 
+en el momento ``pico'' de solicitudes. Para calcular este n\'umero se simula la ejecuci\'on de una traza manteniendo la cantidad de p\'aginas abiertas
+en cada operaci\'on y calculando el m\'aximo de todos estos valores. 
+
+\subsubsection{Proceso de medici\'on}
+La evaluaci\'on de las p\'aginas se encuentra implementada en la clase \textit{CompareStrategies} del paquete \textit{ubadb.bench}. 
+Este proceso genera una salida con formato CSV. En los archivos adjuntos se presenta esta informaci\'on en una planillia de 
+c\'alculo de tipo ODT para una lectura m\'as c\'omoda de los resultados y para posterior generaci\'on de gr\'aficos a partir de 
+los mismos.
+
+\subsection{Resultados}
 
 (ac\'a vienen los gr\'aficos)
-\subsection{An\'alisis de los resultados}
-En el caso de la traza de BNLJ, vemos que mientras tanto MRU como COUNT van creciendo sostenidamente hasta acercarse a la estrategia BEST, LRU y FIFO se mantienen en 0 para tama\~nos menores de buffer y luego reci\'en comienzan a elevar el \textit{hit rate}.
 
-El hit rate supera el 60 a medida que nos acercamos al buffer m\'aximo. Vemos por otra parte, que tanto COUNT como MRU superan para esta traza a las otras estrategias plausibles, salvo a FIFO en el punto en el que abandona el hit rate de 0.
+\subsection{An\'alisis de los resultados y conclusiones}
+En el caso de la traza de BNLJ, vemos que mientras tanto MRU como COUNT van creciendo sostenidamente hasta acercarse a la estrategia 
+BEST, LRU y FIFO se mantienen en 0 para tama\~nos menores de buffer y luego reci\'en comienzan a elevar el \textit{hit rate}.
 
-\subsection{Conclusiones}
-eee (pancho/fabian)
+El hit rate supera el 60 a medida que nos acercamos al buffer m\'aximo. Vemos por otra parte, que tanto COUNT como MRU 
+superan para esta traza a las otras estrategias plausibles, salvo a FIFO en el punto en el que abandona el hit rate de 0.
