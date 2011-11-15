@@ -5,6 +5,7 @@ import ubadb.components.bufferManager.bufferPool.replacementStrategies.PageRepla
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.beststrategy.BestReplacementStrategy;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.count.CountReplacementStrategy;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.fifo.FIFOReplacementStrategy;
+import ubadb.components.bufferManager.bufferPool.replacementStrategies.lesser.LesserReplacementStrategy;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.lru.LRUReplacementStrategy;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.mru.MRUReplacementStrategy;
 import ubadb.components.bufferManager.bufferPool.replacementStrategies.random.RandomReplacementStrategy;
@@ -43,7 +44,8 @@ public class Strategy {
 			new Strategy("MRU", MRUReplacementStrategy.class),
 			new Strategy("LRU", LRUReplacementStrategy.class),
 			new BestStrategy(),
-			new Strategy("Count", CountReplacementStrategy.class)
+			new Strategy("Count", CountReplacementStrategy.class),
+			new Strategy("Lesser", LesserReplacementStrategy.class)
 	//
 	};
 
