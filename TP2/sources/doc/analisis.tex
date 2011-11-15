@@ -1,10 +1,23 @@
 \section{An\'alisis}
 
 \subsection{Mediciones realizadas}
-Aca hablar de lo que casos se midieron y que fue lo que se medio.
-Hay que poner graficos.
-(pancho)
+Se realizaron principalmente dos pruebas:
 
+\begin{itemize}
+\item \textbf{BNLJ}: se trata de una traza que simula el comportamiento de un algoritmo BNLJ para evaluar un join. El outer join consta de 400 p\'aginas, mientras que el inner join comprende 500 p\'aginas. Entre los tipos de traza \textit{puros} propuestos por el enunciado, nos pareci\'o oportuno tomar separadamente este caso, ya que es el \'unico que, considerado individualmente, vuelve a referenciar p\'aginas m\'as de una vez. 
+\item \textbf{Concatenado Random Small}: se trata de una traza compuesta por una contatenaci\'on secuencial de las trazas b\'asicas del enunciado (File Scan, Index Scan Clustered, Index Scan Unclustered, BNLJ). Se obtienen 100 trazas de tipo aleatoriamente elegido entre los b\'asicos con una cantidad de 3 p\'aginas a buscar y se genera la traza por concatenaci\'on. La generaci\'on de la traza se encuentra implementada en la clase \textit{TraceUtil} en el m\'etodo \textit{generateRandomTrace}.
+\item \textbf{Concatenado Random Big}: sigue el mismo esquema que \textbf{Concatenado Random Small} pero 1000 trazas b\'asicas y 15 p\'aginas.
+
+
+\end{itemize}
+
+La evaluaci\'on de las p\'aginas se encuentra implementada en la clase \textit{CompareStrategies} del paquete \textit{ubadb.bench}. Se genera una salida en un cvs y en los archivos adjuntos tambi\'en ofrecemos un odt para una lectura m\'as c\'omoda de los resultados.
+
+Vali\'endonos de las funciones \textit{calculateMaxPinned} y \textit{calculateNumberOfDifferentPages}, pudimos establecer el m\'inimo tama\~no de bloque necesario para evitar casos en los que no se puede reemplazar ninguna p\'agina \footnote{ya que est\'an todas pinneadas}; y el m\'aximo relevante ya que si fuera mayor no se tendr\'ia que reemplazar ninguna p\'agina. Estas funciones se encuentran implementadas en la clase \textit{TraceUtil}.
+
+En los gr\'aficos siguientes tenemos sobre el eje x el porcentaje que va desde el m\'inimo antedicho y el m\'aximo (que corresponde al 100), y en eje y el \textit{hit rate} explicitado anteriormente. 
+
+(ac\'a vienen los gr\'aficos)
 \subsection{An\'alisis de los resultados}
 eee (pancho)
 
