@@ -41,12 +41,42 @@ c\'alculo de tipo ODT para una lectura m\'as c\'omoda de los resultados y para p
 los mismos.
 
 \subsection{Resultados}
+A continuaci\'on se muestran los resultados de la eficiencia (\textit{hit rate}) en funci\'on del tama\~no del buffer, para cada una de las trazas usando cada una de las
+estrategias.
+\subsubsection*{Traza ``BNLJ''} 
+\begin{center}
+  \includegraphics[height=11cm]{bnlj.png}
+\end{center}  
+\subsubsection*{Traza ``Peque\~na''} 
+\begin{center}
+  \includegraphics[height=11cm]{small.png}
+\end{center}  
+\subsubsection*{Traza ``Grande''} 
+\begin{center}
+  \includegraphics[height=11cm]{big.png}
+\end{center}  
 
-(ac\'a vienen los gr\'aficos)
 
 \subsection{An\'alisis de los resultados y conclusiones}
-En el caso de la traza de BNLJ, vemos que mientras tanto MRU como COUNT van creciendo sostenidamente hasta acercarse a la estrategia 
-BEST, LRU y FIFO se mantienen en 0 para tama\~nos menores de buffer y luego reci\'en comienzan a elevar el \textit{hit rate}.
 
-El hit rate supera el 60 a medida que nos acercamos al buffer m\'aximo. Vemos por otra parte, que tanto COUNT como MRU 
-superan para esta traza a las otras estrategias plausibles, salvo a FIFO en el punto en el que abandona el hit rate de 0.
+\subsubsection*{Traza ``BNLJ''}
+En el caso de la traza de \textbf{BNLJ}, se ve que mientras tanto \textbf{MRU}, \textbf{Count} y \textbf{Random} mejoran su eficiencia conforme el tama\~no del buffer
+va aumentando, a partir del $70\%$, \textbf{Count} supera a \textbf{MRU} y esta supera a \textbf{Random}. Por otra parte las estrategias \textbf{FIFO} y \textbf{LRU} tienen
+mala respuesta de performance para buffers peque\~nos y buena respuesta para buffers de mayor capacidad. 
+
+\subsubsection*{Traza ``Grande'' y ``Peque\~na''}
+bla bla bla
+
+\subsection{Tabla de comparaciones}
+En funci\'on de los an\'alisis anteriores se presenta la siguiente tabla comparativa de eficiencia de las distintas estrategias en los distintos contextos:
+\begin{center}
+  \begin{tabular}{ | l | c | c | c | c | }
+    \hline
+    \multirow{2}{*}{Estrategia} & \multicolumn{2}{c|}{\textbf{BNLJ}} & \multicolumn{2}{c|}{\textbf{Aleatorio}} \\
+    & Buffer Peque\~no & Buffer grande & Buffer Peque\~no & Buffer grande \\ \hline
+    \textbf{Count} & Bueno & Bueno & Bueno & Bueno \\ \hline
+    \textbf{MRU} & Bueno & Bueno & Bueno & Bueno \\ \hline
+    \textbf{LRU} & Malo & Bueno & Malo & Bueno \\ \hline
+    \textbf{FIFO} & Malo & Bueno & Malo & Bueno \\ \hline
+  \end{tabular}
+\end{center}

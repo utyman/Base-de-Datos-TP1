@@ -26,11 +26,11 @@ implementaci\'on de dos clases: una para la estrategia y otra para agregarle inf
 \item \textbf{MRU}: esta estrategia registra para cada frame en memoria la fecha en la que fue referenciado por \'ultima vez. Para seleccionar la v\'ictima itera a trav\'es de todas las p\'aginas en memoria y selecciona la que fue referenciada m\'as recientemente.
 \item \textbf{LRU}: al igual que MRU, lleva un registro de la \'ultima vez que fue accedida cada p\'agina y escoge como v\'ictima a la que fue referenciada menos recientemente.
 \item \textbf{Count}: esta estrategia lleva una contabilidad de los pedidos a cada p\'agina y para elegir la v\'ictima, escoge 
-la p\'agina menos pedida hasta el momento. Por esto se la conce como ``No usada frecuentemente'' o NFU.
-\item \textbf{Best}: esta estrategia implementa el algoritmo de reemplazo de p\'agina \'optimo de \textit{Belady}. utiliza el conocimiento de la secuencia completa de pedidos antes de ser ejecutada, por lo tanto no es \'util desde el punto de vista pr\'actico
-pero s\'i para comparar con el resto de las estrategias. Selecciona como v\'ictima la p\'agina con mayor distancia a su pr\'oxima referencia, o bien a una de aquellas p\'aginas que no van a ser m\'as referenciadas en la traza.
-\item \textbf{Random}: la estrategia RANDOM devuelve como v\'ictima un frame al azar. Ser\'a usada para 
-comparar eficiencia con otras estrategias.
+la p\'agina menos pedida hasta el momento. Por esto se la conce como ``No usada frecuentemente'' o NFU \cite{wiki1}.
+\item \textbf{Best}: esta estrategia implementa el algoritmo de reemplazo de p\'agina \'optimo de Belady \cite{bel66}. Utiliza el conocimiento de la secuencia completa de pedidos antes de ser ejecutada, por lo tanto no es \'util desde el punto de vista pr\'actico
+pero s\'i para comparar con el resto de las estrategias. Selecciona como v\'ictima la p\'agina con que tiene el tiempo hasta a su pr\'oxima referencia mas grande, o bien a un p\'agina que no va a volver a ser referenciada.
+\item \textbf{Random}: esta estrategia devuelve como v\'ictima un frame al azar. Ser\'a usada para 
+comparar eficiencia con otras estrategias, dada la falta de l\'ogica en esta estrategia ser\'a considerada como un ``piso'' de la eficiencia. 
 \end{itemize}
 Para seguir manteniendo el orden de c\'odigo estas estrategias se implementaron cada un en un sub-paquete de java propio 
 bajo \textit{ubadb.components.bufferManager.bufferPool.replacementStrategies}.
