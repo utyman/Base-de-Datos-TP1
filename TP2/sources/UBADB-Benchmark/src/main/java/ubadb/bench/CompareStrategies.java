@@ -28,14 +28,21 @@ public class CompareStrategies {
 	private static final PageReferenceTrace TRACE_BIG = TraceUtil
 			.generateRandomTrace(1000, 15);
 
-	private static final PageReferenceTrace TRACE_BNLJ = new PageReferenceTraceGenerator()
+	private static final PageReferenceTrace TRACE_BNLJ_BIG = new PageReferenceTraceGenerator()
 			.generateBNLJ("A", 400, "B", 500, 100);
 
+	private static final PageReferenceTrace TRACE_BNLJ_SMALL = new PageReferenceTraceGenerator()
+			.generateBNLJ("A", 40, "B", 50, 10);
 
 	private static final Test[] TESTS = new Test[] {
-			new Test("FILE SCAN", TRACE_BNLJ),
+			//
+			new Test("BNLJ SMALL", TRACE_BNLJ_SMALL),
+			//
+			new Test("BNLJ BIG", TRACE_BNLJ_BIG),
+			//
 			new Test("SMALL", TRACE_SMALL),
-			new Test("BIG", TRACE_BIG)};
+			//
+			new Test("BIG", TRACE_BIG) };
 
 	void run(String args[]) throws FileNotFoundException {
 		PrintWriter csv = new PrintWriter(new FileOutputStream("output.csv"));
