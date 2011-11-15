@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import ubadb.apps.bufferManagement.PageReferenceTrace;
+import ubadb.apps.bufferManagement.PageReferenceTraceGenerator;
 import ubadb.bench.tests.Test;
 import ubadb.bench.tests.TestResult;
 import ubadb.bench.util.TraceUtil;
@@ -27,8 +28,14 @@ public class CompareStrategies {
 	private static final PageReferenceTrace TRACE_BIG = TraceUtil
 			.generateRandomTrace(1000, 15);
 
+	private static final PageReferenceTrace TRACE_BNLJ = new PageReferenceTraceGenerator()
+			.generateBNLJ("A", 400, "B", 500, 100);
+
+
 	private static final Test[] TESTS = new Test[] {
-			new Test("SMALL", TRACE_SMALL), new Test("BIG", TRACE_BIG) };
+			new Test("FILE SCAN", TRACE_BNLJ),
+			new Test("SMALL", TRACE_SMALL),
+			new Test("BIG", TRACE_BIG)};
 
 	void run(String args[]) throws FileNotFoundException {
 		PrintWriter csv = new PrintWriter(new FileOutputStream("output.csv"));
