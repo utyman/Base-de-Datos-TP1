@@ -216,8 +216,8 @@ CREATE TABLE  `asignaciones_chofer` (
 
 \subsubsection*{RecorridosTodasRutasUsadas}
 
-El siguiente \textit{stored procedure} obtiene todos los recorridos para los cuales se usaron todas las rutas posibles registradas para ese  recorrido, para viajes realizados el año pasado y recorridos asociados a más de una ruta y corresponde al requerimiento listado como 3.I.
-Conceptualmente, se trata de una divisi\'on. Se obtienen todos los recorridos, tales que no existen rutas de ese recorrido para las que no ha habido viajes del \'ultimo a\~no que la usaran. El \'ultimo año se pasa como par\'ametro y se usan funciones auxiliares:
+El siguiente \textit{stored procedure} obtiene todos los recorridos para los cuales se usaron todas las rutas posibles registradas para ese  recorrido, para viajes realizados el a\~no pasado y recorridos asociados a más de una ruta y corresponde al requerimiento listado como 3.I.
+Conceptualmente, se trata de una divisi\'on. Se obtienen todos los recorridos, tales que no existen rutas de ese recorrido para las que no ha habido viajes del \'ultimo a\~no que la usaran. El \'ultimo a\~no se pasa como par\'ametro y se usan funciones auxiliares:
 
 \begin{sql}
 CREATE DEFINER=`root`@`localhost` PROCEDURE  
