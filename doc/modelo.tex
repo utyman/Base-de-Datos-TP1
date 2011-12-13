@@ -42,7 +42,6 @@ Las siguientes entidades y restriccciones abarcan los requerimientos listados co
 \startEntity{Vehiculo}
 \addEntityPk{PATENTE}
 \addEntityFk{IDMODELO}
-\addEntityFk{IDMARCA}
 \addEntityField{a\~no}
 \addEntityField{fechaInicioServicio}
 \addEntityField{capacidadDeTransporte}
@@ -50,7 +49,7 @@ Las siguientes entidades y restriccciones abarcan los requerimientos listados co
 \printEntity{
 PK = CK = \{PATENTE\}
 \\
-FK = \{IDMODELO, IDMARCA\}
+FK = \{IDMODELO\}
 }
 
 \startEntity{VehiculoEnReparacion}
@@ -95,7 +94,7 @@ Las siguientes entidades abarcan los requerimientos listados como 1.III
 
 \startEntity{Ciudad}
 \addEntityPk{IDCIUDAD}
-\addEntityField{nombre}
+\addEntityField{nombreCiudad}
 \printEntity{
 PK = CK = \{IDCIUDAD\}
 }
