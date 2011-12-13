@@ -116,10 +116,10 @@ CREATE TABLE  `rutas` (
   `tiempo_estimado` int(11) NOT NULL,
   `cantidad_peajes` int(11) NOT NULL,
   `descripcion` varchar(100) NOT NULL,
+  `observaciones` varchar(400) NOT NULL,
   PRIMARY KEY (`id_ruta`,`id_recorrido`) USING BTREE,
   KEY `recorrido_constraint` (`id_recorrido`),
-  CONSTRAINT `recorrido_constraint` FOREIGN KEY (`id_recorrido`) 
-  REFERENCES `recorridos` (`id_recorrido`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `recorrido_constraint` FOREIGN KEY (`id_recorrido`) REFERENCES `recorridos` (`id_recorrido`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
 CREATE TABLE  `condiciones_climaticas` (

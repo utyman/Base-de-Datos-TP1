@@ -22,7 +22,8 @@ CREATE TABLE "rutas" (
     "descripcion" text,
     "kms" integer NOT NULL,
     "tiempo_estimado" integer NOT NULL,
-    "nro_peajes" integer NOT NULL
+    "nro_peajes" integer NOT NULL,
+    "observaciones" varchar(400) NOT NULL
 );
 
 CREATE TABLE "situacion_climatica" (
