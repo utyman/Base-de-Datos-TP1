@@ -66,9 +66,12 @@ mala respuesta de performance para buffers peque\~nos y buena respuesta para buf
 
 \subsubsection*{Traza ``Grande'' y ``Peque\~na''}
 
-Hay una diferencia en dos grupos, que se repite tanto para la traza ``Grande'' como ``Peque\~na'': por una parte \textbf{MRU} y \textbf{COUNT} verifican un crecimiento progresivo y sin saltos en el hit rate, mientras que el grupo formado por \textbf{LRU} y \textbf{FIFO} crece a trav\'es de saltos. En el caso de la traza ``Grande'', para el segundo grupo antedicho, se mantiene un nivel bajo de \textit{hit rate} hasta llegar a cerca del $40\%$.  Esto parece indicar que el primer grupo es menos sensible al orden de las trazas concatenadas.
+Hay una diferencia en dos grupos, que se repite tanto para la traza ``Grande'' como ``Peque\~na'': por una parte \textbf{MRU} y \textbf{Count} 
+verifican un crecimiento progresivo y sin saltos en el hit rate, mientras que el grupo formado por \textbf{LRU} y \textbf{FIFO} 
+crece a trav\'es de saltos. En el caso de la traza ``Grande'', para el segundo grupo antedicho, se mantiene un nivel bajo de \textit{hit rate} 
+hasta llegar a cerca del $40\%$.  Esto parece indicar que el primer grupo es menos sensible al orden de las trazas concatenadas.
 
-Por otra parte, vemos que \textbf{COUNT} es la estrategia que supera m\'as consecuentemente a la estrategia aleatoria. 
+Por otra parte, se ve que \textbf{Count} es la estrategia que supera m\'as consecuentemente a la estrategia aleatoria. 
 
 \subsection{Tabla de comparaciones}
 En funci\'on de los an\'alisis anteriores se presenta la siguiente tabla comparativa de eficiencia de las distintas estrategias en los distintos contextos:
