@@ -2,7 +2,7 @@ DELIMITER $$
 drop procedure if exists RecorridosTodasRutasUsadas $$
 	CREATE PROCEDURE RecorridosTodasRutasUsadas(IN ano integer)
 		BEGIN
-		       SELECT r
+		       SELECT *
 	       	       FROM recorridos r
 	       	       WHERE NOT EXISTS
 			 (SELECT rut.id_ruta
@@ -10,10 +10,11 @@ drop procedure if exists RecorridosTodasRutasUsadas $$
 			  WHERE NOT EXISTS 
 				(SELECT v.id_ruta
 				 FROM viajes_realizados v
-				 WHERE YEAR(v.fechaLlegada) = ano
-				       AND v.id_ruta = rut.id_rutaa
-				       AND v.id_recorrido = r.recorrido)
-			 ) AND ((SELECT count(rut.id_ruta) FROM rutas WHERE rut.id_recorrido = r.id_recorrido) = 1);
+				 natural join viajes v1
+				 WHERE YEAR(v.fecha_hora_llegada) = ano
+				       AND v.id_ruta = rut.id_ruta
+				       AND v1.id_recorrido = r.id_recorrido)
+			 ) AND ((SELECT count(*) FROM rutas rut WHERE rut.id_recorrido = r.id_recorrido) != 1);
 		END $$
 
 drop function if exists `promedioViajesRealizadosPorAno` $$
@@ -32,7 +33,7 @@ end $$
 drop procedure if exists `promedioViajesYEstado` $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE  `promedioViajesYEstado`()
 BEGIN
-		SELECT (SELECT promedioViajesRealizadosPorAno(patente)), situacion from vehiculos;
+		SELECT patente, (SELECT promedioViajesRealizadosPorAno(patente)) as promedio, situacion from vehiculos;
 		END $$
 
 
@@ -60,19 +61,19 @@ BEGIN
 				)      
 				) 
 			 );
-		END
+		END $$
 		
 		CREATE DEFINER=`root`@`localhost` FUNCTION  
 		`agregardosanos`(id_vehiculo varchar(10)) RETURNS datetime
 BEGIN
 		return DATE_ADD((SELECT fecha_inicio_servicio FROM vehiculos where patente = id_vehiculo), 
 						INTERVAL 2 YEAR);
-		END
+		END $$
 		
 
 		CREATE DEFINER=`root`@`localhost` FUNCTION  `agregarseismeses`(fecha DATETIME) 
 		RETURNS datetime
 BEGIN
 		return DATE_ADD(fecha, INTERVAL 6 MONTH);
-		END
+		END $$
 
