@@ -76,3 +76,13 @@ FOR EACH ROW BEGIN
 	  set @DESACTIVA_TRIGGER = NULL;
 	end if;
 end $$ 
+
+delimiter $$
+CREATE TRIGGER tres_choferes
+before insert ON asignaciones_chofer
+FOR EACH ROW BEGIN
+    set @choferes = (select count(*) from asignaciones_chofer where id_viaje = new.id_viaje);
+    if (@choferes >= 3) then
+    	CALL trigger_error_ya_hay_tres_choferes_asignados;
+    end if;
+end $$
